@@ -20,7 +20,6 @@ Print( "Read ncp_hyper.gap" );
 # Returns the tensor product of
 # ketzeros and ketones in given order
 ###
-
 BitstringTensor := function( bitstring )
     local res, bit;
 
@@ -42,7 +41,6 @@ end;
 # Retuns a list of ditstrings that count from 0 to base^numDigits - 1
 # Function is a binary counting algorithm expanded to all bases
 ###
-
 BaseNCounting := function( base, numDigits )
     local i, value, ditStrings;
 
@@ -69,7 +67,6 @@ end;
 #          [ [ 1, 6 ], [ 2, 3 ], [ 4, 5 ] ]
 #          [ [ 1, 6 ], [ 2, 5 ], [ 3, 4 ] ]]
 ###
-
 NonCrossingPairs := function( lst )
     local res, i, left, right, leftPairs, rightPairs, lp, rp;
 
@@ -108,7 +105,6 @@ end;
 #
 # res is a list of states, where states are lists / vectors themselves
 ###
-
 PairsToHypergraph := function( numQubits, lsts )
     local sublst, i, res, subres;
 
@@ -132,7 +128,6 @@ end;
 #
 # Function returns nothing
 ###
-
 StatesToMatrices := function( states )
     local i, j, n, sublst, count ;
 
@@ -166,7 +161,6 @@ end;
 # in the CHORD diagrams as its argument
 # Returns a matrix where each row is an NCC diagram's state vector
 ###
-
 CreateNCCMatrix := function( numQubits )
     local allPairSets, pairs, res, prod, singletProducts, i, val, state;
 
@@ -214,7 +208,6 @@ end;
 # non-crossing-chord diagram
 # whose chords are specified by the list of lists called pairs
 ###
-
 SingletTensor := function( pairs )
     local singlets, base, permutation, res, i, digits;
 
@@ -250,7 +243,6 @@ end;
 # [ [1,0,...,1], [0,0,...1],... ]
 # where each sublist is a term in the expansion of the tensor product
 ###
-
 SingletProduct := function( pairs )
     local n, pair, result, vec1, vec2, newResult, s;
 
@@ -291,7 +283,6 @@ end;
 #
 # Returns a vector of the *flattened* rhos
 ###
-
 GenerateNCPs := function( numQubits )
     local diagrams, rhos, d;
 
@@ -310,7 +301,7 @@ GenerateNCPs := function( numQubits )
 end;
 
 ###
-# PolygonToChordDiagram() takes an n-qubit NCP diagram and
+# SplitNCP() takes an n-qubit NCP diagram and
 # returns the chord pairs of the corresponding 2n-qubit NCC diagram
 #
 # lsts is a list of lists describing the connected vertices
@@ -318,7 +309,6 @@ end;
 # Function returns a list of chord pairs
 # (which are represented by two element lists)
 ###
-
 SplitNCP := function( lsts )
     local sublst, i, res, subres, j, chord;
 
@@ -371,7 +361,6 @@ end;
 #
 # Returns C(I) where I = bitstring
 ###
-
 CofI := function( bitstring )
     local k, sum, alpha, rootUnity, n;
 
@@ -398,7 +387,6 @@ end;
 # of (numQubits - 1) NCPs equals the
 # N-gon with the nth qubit traced out
 ###
-
 TraceOutNGon := function( numQubits )
     local tracedNGon, nGon, underGons, targetQubits, gon, res, place, count;
 
@@ -446,7 +434,6 @@ end;
 # Generates 2^n by 2^n permutation matrices
 # perm is a permutation written in cycle notation
 ###
-
 PermMatGen := function( n, perm )
     local M, N, row;
 
@@ -468,7 +455,6 @@ end;
 # Generates dim^n by dim^n permutation matrices
 # perm is a permutation written in cycle notation
 ###
-
 PermMatGenQudits := function( dim, n, perm )
     local M, N, row;
 
@@ -496,7 +482,6 @@ end;
 # TraceOutNGon(), except it returns the decmial
 # representation of results
 ###
-
 TraceOutNGonDecimal := function( numQubits )
     local exactLst, decLst, pos, value, count;
 
@@ -524,7 +509,6 @@ end;
 # REQUIRES "orbdim.gap"
 # Returns density matrix of a numQudits-Gon diagram in local dimension dim
 ###
-
 WernerGonQudits := function( dim, numQudits )
     local res, sz;
 
@@ -541,7 +525,6 @@ end;
 # lsts is a list of lists, dim is the local dimension
 # Function returns rho of the specified diagram state
 ###
-
 WernerDiagramQudits := function( dim, lsts )
     local flatLsts, numQudits, densityMatrices, res, gon, permMatrices, permMatrix, perm, perms;
 
@@ -580,7 +563,6 @@ end;
 # Function returns a list of the form:
 # [ coefficient of top-gon, [ coefficients of lower gons including top-gon ] ]
 ###
-
 TraceOutQudits := function( dim, numQudits, targetQudits )
     local tracedNGon, nGon, underGons, gon, res, place, count, quditDiff;
 
@@ -630,7 +612,6 @@ end;
 # in the positions of the polygons in the diagram
 # Ex: DopeyString( [ [1,4], [2, 3], [5, 6, 7] ] ); -> [ 0, 0, 1, 1, 0, 0, 1]
 ###
-
 DopeyString := function( diagram )
     local polygon, qubit, bitstring, numQubits, gonLength, count;
 
