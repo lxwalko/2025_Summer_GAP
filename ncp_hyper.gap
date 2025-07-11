@@ -653,7 +653,7 @@ end;
 
 # Cycles the target qubits in a bitstring k times
 CycleQubitsK := function( k, bitstring, targetQubits )
-    local i, substring;
+    local i, substring, newBitstring;
 
     substring := [];
     for i in targetQubits do
@@ -662,32 +662,35 @@ CycleQubitsK := function( k, bitstring, targetQubits )
 
     substring := VirginiaCycleK( k, substring );
 
+    newBitstring := ShallowCopy( bitstring );
     for i in [1..Length( targetQubits )] do
-        bitstring[ targetQubits[ i ] ] := substring[ i ];
+        newBitstring[ targetQubits[ i ] ] := substring[ i ];
     od;
 
-    return bitstring;
+    return newBitstring;
 end;
 
 # Handles the recursion of looping over each polygon Length( polygon ) times
-PolygonIteration := function( bitstring, diagram, stateVec, dCount )
-    local targetQubits, i, subVec, rootUnity;
-    Print(bitstring);Print(" ");Print(dCount);Print("\n");
+PolygonIteration := function( bitstring, diagram, dCount )
+    local targetQubits, i, rootUnity, totalVec, recursiveVec, newBitstring;
 
-    if dCount = Length( diagram ) + 1 then
-        return stateVec;
+    if dCount > Length( diagram ) then
+        return BitstringTensor( bitstring );
     fi;
 
     targetQubits := diagram[ dCount ];
+    totalVec := [];
 
-    for i in [1..Length( diagram[ dCount ] )] do
+    for i in [1..Length( targetQubits )] do
         rootUnity := E( Length( targetQubits ) )^i;
-        subVec := rootUnity * BitstringTensor( CycleQubitsK( i, bitstring, targetQubits ) );
+        newBitstring := CycleQubitsK( i, bitstring, targetQubits );
 
-        stateVec := stateVec + subVec;
+        recursiveVec := rootUnity * PolygonIteration( newBitstring, diagram, dCount + 1 );
+
+        totalVec := totalVec + recursiveVec;
     od;
 
-    return PolygonIteration( bitstring, diagram, stateVec, dCount + 1 );
+    return totalVec;
 end;
 
 # Calculates the state vector for a diagram using the dopey string
@@ -695,12 +698,12 @@ CDofI := function( diagram, bitstring )
     local normFactor, rootUnity, polygon, qubit, resVec;
 
     normFactor := CDNorm( diagram );
-    resVec := PolygonIteration( bitstring, diagram, [], 1 );
+    resVec := PolygonIteration( bitstring, diagram, 1 );
 
     return normFactor * resVec;
 end;
 
-# Helper function to allow sorting NCP diagrams
+# Comparison function
 # Sorts so that N-gon is last,  all dots is first
 CompareDiagrams := function( diagramOne, diagramTwo )
     if Length( diagramOne ) < Length( diagramTwo ) then
@@ -708,9 +711,12 @@ CompareDiagrams := function( diagramOne, diagramTwo )
     fi;
     return true;
 end;
-
-## Needs fixing, iterations in PolygonIteration() are definitely wrong. Need to work on the ordering.
-CreateSomethingMatrix := function( numQubits )
+###
+# Creates Linear States from Eigenstates Matrix
+#
+# Each i,j entry
+###
+CreateLSEMatrix := function( numQubits )
     local diagrams, polygonOperators, stateVecs, matrix, row, operator, state;
 
     matrix := [];

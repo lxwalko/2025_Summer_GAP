@@ -169,3 +169,24 @@ MakeBasisVector := function( n, pos1, bit1, pos2, bit2 )
 
     return vec;
 end;
+
+# Finds the maximum value in a matrix
+FindMax := function( matrix )
+    local row, col, big, current;
+
+    # initialize value big to be the first entry in the matrix
+    big := matrix[ 1 ][ 1 ];
+
+    for row in [1..Length( matrix )] do
+        for col in [1..Length( matrix[ row ] )] do
+            current := matrix[ row ][ col ];
+
+            # make current value big if it's larger than all previous values
+            if big < current then
+                big := current;
+            fi;
+        od;
+    od;
+
+    return big;
+end;
