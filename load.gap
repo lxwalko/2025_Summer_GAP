@@ -3,12 +3,10 @@ SetFloats(MPFR, 128);
 
 Print("\n");
 
-Read("orbdim.gap");
+Read("orbdim.gap");Print("\n");
 
-Print("\n");
+Read("werner.gap");Print("\n");
 
-Read("werner.gap");
+Read("utilities.gap");Print("\n");
 
-Print("\n");
-
-Read("ncp_hyper.gap");
+Read("ncp_hyper.gap");Print("\n");

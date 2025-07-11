@@ -15,83 +15,62 @@
 
 Print( "Read ncp_hyper.gap" );
 
-### Basic operators, constants, and values ###
+########## Helper Functions ##########
 
-# Hadamard gate
-hadamard := 1/Sqrt( 2 ) * [ [1,1], [1,-1] ];
+# Helper function to create a basis vector of length n with specified entries
+MakeBasisVector := function( n, pos1, bit1, pos2, bit2 )
+    local vec;
 
-# Pauli X
-pauliX := [ [0,1], [1,0] ];
+    vec := List( [1..n], i -> 0 );  # initialize to all 0s
+    vec[ pos1 ] := bit1;
+    vec[ pos2 ] := bit2;
 
-# Pauli Y
-pauliY := [ [0, -Sqrt( -1 )], [Sqrt( -1 ), 0] ];
-
-# Pauli Z
-pauliZ := [ [1, 0], [0, -1] ];
-
-# 1 / Sqrt( 2 )
-invroot2 := 1 / Sqrt( 2 );
-
-# |0〉
-ketzero := [ [1], [0] ];
-
-# |1〉
-ketone := [ [0], [1] ];
-
-# |01〉- |10〉
-singlet := invroot2 * [ 0, 1, -1, 0 ];
-
-### Methods ###
-
-# BlanksString() is a helper function for PrintMatrix
-BlanksString := function( n )
-    return Concatenation( List( [1..n], i -> " " ) );
+    return vec;
 end;
 
 ###
-# PrintMatrix() takes a list of lists and prints the
-# formatted version to the console
-# Output looks like:     [[...]
-#                         [...]
-#                         [...]]
-# Function returns nothing
+# Takes a list of 0s and 1s such as
+# [ 1, 0, 0, 1, 1]
+# Returns the tensor product of
+# ketzeros and ketones in given order
 ###
 
-PrintMatrix := function( matrix )
-    local row, elem, maxLen, rowStr, strElem;
+BitstringTensor := function( bitstring )
+    local res, bit;
 
-    # Determine the maximum width of any element when converted to string
-    maxLen := 0;
+    res := [ [1] ];
 
-    for row in matrix do
-        for elem in row do
-            strElem := String( elem );
+    for bit in bitstring do
 
-            if Length( strElem ) > maxLen then
-                maxLen := Length( strElem );
-            fi;
-        od;
+        if bit = 1 then
+            res := KroneckerProduct( res, ketone );
+        else
+            res := KroneckerProduct( res, ketzero );
+        fi;
     od;
 
-    # Print each row with elements left-aligned
-    for row in matrix do
-
-        rowStr := "[";
-
-        for elem in row do
-            strElem := String( elem );
-            rowStr := Concatenation(rowStr,
-                        strElem,
-                        BlanksString( maxLen - Length( strElem ) ),
-                        " ");
-        od;
-
-        Print( rowStr, "]\n" );
-    od;
-
-    Print( "\n" );
-
+    return normalize( res );
 end;
+
+###
+# Retuns a list of ditstrings that count from 0 to base^numDigits - 1
+# Function is a binary counting algorithm expanded to all bases
+###
+
+BaseNCounting := function( base, numDigits )
+    local i, value, ditStrings;
+
+    ditStrings := [];
+
+    for i in [0..(base^numDigits - 1)] do
+        value := dec2baseNlist( i, base, numDigits );
+        Add( ditStrings, value );
+    od;
+
+    return ditStrings;
+end;
+
+########## Hypergraph and Non-Crossing Chord Methods ##########
 
 ###
 # NonCrossingPairs() takes a list of points and
@@ -160,23 +139,6 @@ PairsToHypergraph := function( numQubits, lsts )
 end;
 
 ###
-# IsIndependent() checks if a list of states is linearly independent
-# states is a list of lists, like that produced by PairsToHypergraph()
-#
-# Returns true if linearly independent
-# Returns false if not
-###
-
-IsIndependent := function( states )
-
-    if RankMat( states ) = Length( states ) then
-        return true;
-    fi;
-
-    return false;
-end;
-
-###
 # StatesToMatrices() takes states produced by
 # PairsToHypergraph() or HypergraphState() and displays
 # the length n^2 state vectors as nxn matrices,
@@ -209,180 +171,6 @@ StatesToMatrices := function( states )
         Print( "\n\n" );
     od;
 
-end;
-
-###
-# Generates all the NCP states for n qubits
-#
-# Returns a vector of the *flattened* rhos
-###
-
-GenerateNCPs := function( numQubits )
-    local diagrams, rhos, d;
-
-    rhos:= [];
-
-    # generate all the polygons that describe the NCPs
-    diagrams := NCPartitionsSet( [1..numQubits] );
-
-    # create a flattened rho for each diagram and add it to the list
-    for d in diagrams do
-        Add( rhos, Flat( WernerDiagram( d ) ) );
-    od;
-
-    # return flattened rhos
-    return rhos;
-end;
-
-###
-# PolygonToChordDiagram() takes an n-qubit NCP diagram and
-# returns the chord pairs of the corresponding 2n-qubit NCC diagram
-#
-# lsts is a list of lists describing the connected vertices
-#
-# Function returns a list of chord pairs
-# (which are represented by two element lists)
-###
-
-PolygonToChordDiagram := function( lsts )
-    local sublst, i, res, subres, j, chord;
-
-    res := [];
-
-    for sublst in lsts do
-        subres := [];
-
-        for i in [1..Length( sublst )] do
-
-            # Add 2a_i - 1 and 2a_i to the list
-            Add( subres, ( (2 * sublst[ i ]) - 1 ) );
-            Add( subres, ( 2 * sublst[ i ] ) );
-        od;
-
-        for j in [1..( Length( subres ) - 1 ) ] do
-            chord := [];
-
-            if j = 1 then
-
-                # Create the chord between the first and last elements
-                Add( chord, subres[ 1 ] );
-                Add( chord, subres[ Length(subres) ] );
-
-                # Add the chord to the output list
-                Add( res, chord );
-            else
-                if j mod 2 = 0 then
-
-                    # Create the chord between 2a_i and 2a_(i+1) -1
-                    Add( chord, subres[ j ] );
-                    Add( chord, subres[ j + 1 ] );
-
-                    # Add the chord to the output list
-                    Add( res, chord );
-                fi;
-            fi;
-
-        od;
-    od;
-
-    return res;
-end;
-
-# Helper function to create a basis vector of length n with specified entries
-MakeBasisVector := function( n, pos1, bit1, pos2, bit2 )
-    local vec;
-
-    vec := List( [1..n], i -> 0 );  # initialize to all 0s
-    vec[ pos1 ] := bit1;
-    vec[ pos2 ] := bit2;
-
-    return vec;
-end;
-
-###
-# SingletProduct() takes a list of pairs of the form:
-# [ [a, b], [c, d],... ]
-# where each pair specifies the qubit positions that form the singlet
-#
-# Function returns list of lists of the form:
-# [ [1,0,...,1], [0,0,...1],... ]
-# where each sublist is a term in the expansion of the tensor product
-###
-
-SingletProduct := function( pairs )
-    local n, pair, result, vec1, vec2, newResult, s;
-
-    # Determine number of qubits (largest index)
-    n := 2 * Length( pairs );
-
-    # Start with the empty product: one all-zero vector
-    result := [ List([1..n], i -> 0) ];
-
-    for pair in pairs do
-        newResult := [];
-
-        for s in result do
-            # For each existing term, create new terms from the singlet
-
-            vec1 := ShallowCopy( s );
-            vec1[ pair[ 1 ] ] := 0;
-            vec1[ pair[ 2 ] ] := 1;
-
-            vec2 := ShallowCopy( s );
-            vec2[ pair[ 1 ] ] := 1;
-            vec2[ pair[ 2 ] ] := 0;
-
-            Add( newResult, vec1 );
-            Add( newResult, vec2 );
-        od;
-
-        result := newResult;
-    od;
-
-    return result;
-end;
-
-###
-# REQUIRES "orbdim.gap"
-#
-# SingletTensor() returns the state vector of a
-# non-crossing-chord diagram
-# whose chords are specified by the list of lists called pairs
-###
-
-SingletTensor := function( pairs )
-    local singlets, base, permutation, res, i, digits;
-
-    singlets := List( [1..Length( pairs )], i -> singlet );
-
-    base := normalize( KronVec( singlets ) );
-
-    permutation := PartialPerm( List( [1..Length( pairs ) * 2] ), Flat( pairs ) );
-
-    res := PermuteQubitsPsi( base, permutation );
-
-    digits := [];
-
-    for i in [1..Length( res )] do
-        if res[ i ] <> 0 then
-            Add( digits, res[ i ] );
-        fi;
-    od;
-
-    if digits[ 1 ] < 0 then
-        res := (-1) * res;
-    fi;
-
-    return res;
-end;
-
-# Helper function, swaps two objects in a list
-Swap := function( lst, index1, index2 )
-    local temp;
-
-    temp := lst[ index1 ];
-    lst[ index1 ] := lst[ index2 ];
-    lst[ index2 ] := temp;
 end;
 
 ###
@@ -434,45 +222,159 @@ CreateNCCMatrix := function( numQubits )
 end;
 
 ###
-# Takes a list of 0s and 1s such as
-# [ 1, 0, 0, 1, 1]
-# Returns the tensor product of
-# ketzeros and ketones in given order
+# REQUIRES "orbdim.gap"
+#
+# SingletTensor() returns the state vector of a
+# non-crossing-chord diagram
+# whose chords are specified by the list of lists called pairs
 ###
 
-BitstringTensor := function( bitstring )
-    local res, bit;
+SingletTensor := function( pairs )
+    local singlets, base, permutation, res, i, digits;
 
-    res := [ [1] ];
+    singlets := List( [1..Length( pairs )], i -> singlet );
 
-    for bit in bitstring do
+    base := normalize( KronVec( singlets ) );
 
-        if bit = 1 then
-            res := KroneckerProduct( res, ketone );
-        else
-            res := KroneckerProduct( res, ketzero );
+    permutation := PartialPerm( List( [1..Length( pairs ) * 2] ), Flat( pairs ) );
+
+    res := PermuteQubitsPsi( base, permutation );
+
+    digits := [];
+
+    for i in [1..Length( res )] do
+        if res[ i ] <> 0 then
+            Add( digits, res[ i ] );
         fi;
     od;
 
-    return normalize( res );
+    if digits[ 1 ] < 0 then
+        res := (-1) * res;
+    fi;
+
+    return res;
 end;
 
 ###
-# REQUIRES "orbdim.gap"
-# Virginia cycles list k times
+# SingletProduct() takes a list of pairs of the form:
+# [ [a, b], [c, d],... ]
+# where each pair specifies the qubit positions that form the singlet
 #
-# Function changes the list given to it and
-# returns the result
+# Function returns list of lists of the form:
+# [ [1,0,...,1], [0,0,...1],... ]
+# where each sublist is a term in the expansion of the tensor product
 ###
 
-VirginiaCycleK := function( k, lst )
-    local i;
+SingletProduct := function( pairs )
+    local n, pair, result, vec1, vec2, newResult, s;
 
-    for i in [1..k] do
-        lst := virginiaCycleList( lst );
+    # Determine number of qubits (largest index)
+    n := 2 * Length( pairs );
+
+    # Start with the empty product: one all-zero vector
+    result := [ List([1..n], i -> 0) ];
+
+    for pair in pairs do
+        newResult := [];
+
+        for s in result do
+            # For each existing term, create new terms from the singlet
+
+            vec1 := ShallowCopy( s );
+            vec1[ pair[ 1 ] ] := 0;
+            vec1[ pair[ 2 ] ] := 1;
+
+            vec2 := ShallowCopy( s );
+            vec2[ pair[ 1 ] ] := 1;
+            vec2[ pair[ 2 ] ] := 0;
+
+            Add( newResult, vec1 );
+            Add( newResult, vec2 );
+        od;
+
+        result := newResult;
     od;
 
-    return lst;
+    return result;
+end;
+
+########## Non-Crossing Polygon State Methods ##########
+
+###
+# Generates all the NCP states for n qubits
+#
+# Returns a vector of the *flattened* rhos
+###
+
+GenerateNCPs := function( numQubits )
+    local diagrams, rhos, d;
+
+    rhos:= [];
+
+    # generate all the polygons that describe the NCPs
+    diagrams := NCPartitionsSet( [1..numQubits] );
+
+    # create a flattened rho for each diagram and add it to the list
+    for d in diagrams do
+        Add( rhos, Flat( WernerDiagram( d ) ) );
+    od;
+
+    # return flattened rhos
+    return rhos;
+end;
+
+###
+# PolygonToChordDiagram() takes an n-qubit NCP diagram and
+# returns the chord pairs of the corresponding 2n-qubit NCC diagram
+#
+# lsts is a list of lists describing the connected vertices
+#
+# Function returns a list of chord pairs
+# (which are represented by two element lists)
+###
+
+SplitNCP := function( lsts )
+    local sublst, i, res, subres, j, chord;
+
+    res := [];
+
+    for sublst in lsts do
+        subres := [];
+
+        for i in [1..Length( sublst )] do
+
+            # Add 2a_i - 1 and 2a_i to the list
+            Add( subres, ( (2 * sublst[ i ]) - 1 ) );
+            Add( subres, ( 2 * sublst[ i ] ) );
+        od;
+
+        for j in [1..( Length( subres ) - 1 ) ] do
+            chord := [];
+
+            if j = 1 then
+
+                # Create the chord between the first and last elements
+                Add( chord, subres[ 1 ] );
+                Add( chord, subres[ Length(subres) ] );
+
+                # Add the chord to the output list
+                Add( res, chord );
+            else
+                if j mod 2 = 0 then
+
+                    # Create the chord between 2a_i and 2a_(i+1) -1
+                    Add( chord, subres[ j ] );
+                    Add( chord, subres[ j + 1 ] );
+
+                    # Add the chord to the output list
+                    Add( res, chord );
+                fi;
+            fi;
+
+        od;
+    od;
+
+    return res;
 end;
 
 ###
@@ -500,16 +402,6 @@ CofI := function( bitstring )
     od;
 
     return normalize( sum );
-end;
-
-
-###
-# REQUIRES "orbdim.gap"
-# Returns <a|b>
-###
-
-InnerProduct := function( a, b )
-    return Trace( ConjugateTranspose( a ) * b );
 end;
 
 ###
@@ -603,33 +495,6 @@ PermMatGenQudits := function( dim, n, perm )
     od;
 
     return N;
-
-end;
-
-###
-# Function find all the non-zero entries of a matrix
-# and logs their locations and values in the format
-# [ row, col, value ] ***Assuming indexing starts at zero!
-###
-
-NonZeroLocations := function( matrix )
-    local row, col, rowDim, colDim, res;
-
-    rowDim := Length( matrix );
-    colDim := Length( matrix[ 1 ] );
-
-    res := [];
-
-    for row in [1..rowDim] do
-        for col in [1..colDim] do
-
-            if matrix[ row ][ col ] <> 0 then
-                Add( res, [ row - 1, col - 1, matrix[ row ][ col ] ] );
-            fi;
-        od;
-    od;
-
-    return res;
 
 end;
 
@@ -768,24 +633,6 @@ TraceOutQudits := function( dim, numQudits, targetQudits )
 
     # returns the coefficient of the (n-1)-gon
     return [res[ place ], res];
-end;
-
-###
-# Retuns a list of ditstrings that count from 0 to base^numDigits - 1
-# Function is a binary counting algorithm expanded to all bases
-###
-
-BaseNCounting := function( base, numDigits )
-    local i, value, ditStrings;
-
-    ditStrings := [];
-
-    for i in [0..(base^numDigits - 1)] do
-        value := dec2baseNlist( i, base, numDigits );
-        Add( ditStrings, value );
-    od;
-
-    return ditStrings;
 end;
 
 ### July 10th Code, No name for it yet ###
