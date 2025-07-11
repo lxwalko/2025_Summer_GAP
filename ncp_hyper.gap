@@ -7,6 +7,9 @@
 ### (Run this function)--> Read("orbdim.gap");
 ### Dependencies are marked
 
+# In the process of refactoring / reorganizing. Dependencies will change.
+# TODO: Update dependencies
+
 ### Some functions require "Float" package
 ### This must be downloaded and installed
 ### Visit https://gap-packages.github.io/float/
@@ -155,6 +158,83 @@ StatesToMatrices := function( states )
 end;
 
 ###
+# SingletProduct() takes a list of pairs of the form:
+# [ [a, b], [c, d],... ]
+# where each pair specifies the qubit positions that form the singlet
+#
+# Function returns list of lists of the form:
+# [ [1,0,...,1], [0,0,...1],... ]
+# where each sublist is a term in the expansion of the tensor product
+###
+SingletProduct := function( pairs )
+    local n, pair, result, vec1, vec2, newResult, s;
+
+    # Determine number of qubits (largest index)
+    n := 2 * Length( pairs );
+
+    # Start with the empty product: one all-zero vector
+    result := [ List([1..n], i -> 0) ];
+
+    for pair in pairs do
+        newResult := [];
+
+        for s in result do
+            # For each existing term, create new terms from the singlet
+
+            vec1 := ShallowCopy( s );
+            vec1[ pair[ 1 ] ] := 0;
+            vec1[ pair[ 2 ] ] := 1;
+
+            vec2 := ShallowCopy( s );
+            vec2[ pair[ 1 ] ] := 1;
+            vec2[ pair[ 2 ] ] := 0;
+
+            Add( newResult, vec1 );
+            Add( newResult, vec2 );
+        od;
+
+        result := newResult;
+    od;
+
+    return result;
+end;
+
+###
+# REQUIRES "orbdim.gap"
+#
+# SingletTensor() returns the state vector of a
+# non-crossing-chord diagram
+# whose chords are specified by the list of lists called pairs
+###
+SingletTensor := function( pairs )
+    local singlets, base, permutation, res, i, digits;
+
+    singlets := List( [1..Length( pairs )], i -> singlet );
+
+    # initial vector before permutation
+    base := normalize( KronVec( singlets ) );
+
+    # Creates permutation by comparing [1..numQubits] to Flat( [[polygon1], [polygon2],...] )
+    permutation := PartialPerm( List( [1..Length( pairs ) * 2] ), Flat( pairs ) );
+
+    res := PermuteQubitsPsi( base, permutation );
+
+    digits := [];
+
+    for i in [1..Length( res )] do
+        if res[ i ] <> 0 then
+            Add( digits, res[ i ] );
+        fi;
+    od;
+
+    if digits[ 1 ] < 0 then
+        res := (-1) * res;
+    fi;
+
+    return res;
+end;
+
+###
 # REQUIRES "orbdim.gap"
 #
 # CreateNCCMatrix() takes the number of qubits
@@ -199,81 +279,6 @@ CreateNCCMatrix := function( numQubits )
     od;
 
     return res;
-end;
-
-###
-# REQUIRES "orbdim.gap"
-#
-# SingletTensor() returns the state vector of a
-# non-crossing-chord diagram
-# whose chords are specified by the list of lists called pairs
-###
-SingletTensor := function( pairs )
-    local singlets, base, permutation, res, i, digits;
-
-    singlets := List( [1..Length( pairs )], i -> singlet );
-
-    base := normalize( KronVec( singlets ) );
-
-    permutation := PartialPerm( List( [1..Length( pairs ) * 2] ), Flat( pairs ) );
-
-    res := PermuteQubitsPsi( base, permutation );
-
-    digits := [];
-
-    for i in [1..Length( res )] do
-        if res[ i ] <> 0 then
-            Add( digits, res[ i ] );
-        fi;
-    od;
-
-    if digits[ 1 ] < 0 then
-        res := (-1) * res;
-    fi;
-
-    return res;
-end;
-
-###
-# SingletProduct() takes a list of pairs of the form:
-# [ [a, b], [c, d],... ]
-# where each pair specifies the qubit positions that form the singlet
-#
-# Function returns list of lists of the form:
-# [ [1,0,...,1], [0,0,...1],... ]
-# where each sublist is a term in the expansion of the tensor product
-###
-SingletProduct := function( pairs )
-    local n, pair, result, vec1, vec2, newResult, s;
-
-    # Determine number of qubits (largest index)
-    n := 2 * Length( pairs );
-
-    # Start with the empty product: one all-zero vector
-    result := [ List([1..n], i -> 0) ];
-
-    for pair in pairs do
-        newResult := [];
-
-        for s in result do
-            # For each existing term, create new terms from the singlet
-
-            vec1 := ShallowCopy( s );
-            vec1[ pair[ 1 ] ] := 0;
-            vec1[ pair[ 2 ] ] := 1;
-
-            vec2 := ShallowCopy( s );
-            vec2[ pair[ 1 ] ] := 1;
-            vec2[ pair[ 2 ] ] := 0;
-
-            Add( newResult, vec1 );
-            Add( newResult, vec2 );
-        od;
-
-        result := newResult;
-    od;
-
-    return result;
 end;
 
 ########## Non-Crossing Polygon State Methods ##########
