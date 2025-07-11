@@ -12,21 +12,7 @@
 ### Visit https://gap-packages.github.io/float/
 ### for more information
 
-
 Print( "Read ncp_hyper.gap" );
-
-########## Helper Functions ##########
-
-# Helper function to create a basis vector of length n with specified entries
-MakeBasisVector := function( n, pos1, bit1, pos2, bit2 )
-    local vec;
-
-    vec := List( [1..n], i -> 0 );  # initialize to all 0s
-    vec[ pos1 ] := bit1;
-    vec[ pos2 ] := bit2;
-
-    return vec;
-end;
 
 ###
 # Takes a list of 0s and 1s such as
