@@ -679,17 +679,19 @@ end;
 ###
 CreateLSEMatrix := function( numQubits )
     local diagrams, polygonOperators, stateVecs, matrix, row, operator, state;
-
+    # init matrix
     matrix := [];
-
+    # Create NCP diagrams and sort so that all dots is first, and n-gon is last
     diagrams := NCPartitionsSet( [1..numQubits] );
     StableSort( diagrams, CompareDiagrams );
+    # Create rhos and psis for each NCP diagram
     polygonOperators := List( diagrams, WernerDiagram );
     stateVecs := List( diagrams, x -> CDofI( x, DopeyString( x ) ) );
 
     for state in stateVecs do
         row := [];
         for operator in polygonOperators do
+            # Add <psi_Di | rho_Ej | psi_Di> to matrix
             Add( row, InnerProduct( state, (operator * state) ) );
         od;
 
@@ -697,4 +699,35 @@ CreateLSEMatrix := function( numQubits )
     od;
 
     return matrix;
+end;
+
+###
+# Creates a normalized LSE Matrix. Each entry is divided
+# by <psi_Di | rho_Di | psi_Di>
+# **Returned Matrix is transpose of LSEMatrix output**
+###
+CreateNLSEMatrix := function( numQubits )
+    local diagrams, polygonOperators, stateVecs, matrix, row, i, j, normFactor, value;
+
+    matrix := [];
+
+    diagrams := NCPartitionsSet( [1..numQubits] );
+    StableSort( diagrams, CompareDiagrams );
+    polygonOperators := List( diagrams, WernerDiagram );
+    stateVecs := List( diagrams, x -> CDofI( x, DopeyString( x ) ) );
+    
+    for i in [1..Length( stateVecs )] do
+        row := [];
+        
+        for j in [1..Length( polygonOperators )] do
+            normFactor := InnerProduct( stateVecs[ i ], ( polygonOperators[ i ] * stateVecs[ i ] ) );
+            value := InnerProduct( stateVecs[ i ], ( polygonOperators[ j ] * stateVecs[ i ] ) );
+            
+            Add( row, value / normFactor );
+        od;
+        
+        Add( matrix, row );
+    od;
+
+    return TransposedMat( matrix );
 end;
