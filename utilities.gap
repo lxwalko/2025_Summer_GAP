@@ -190,3 +190,6 @@ FindMax := function( matrix )
 
     return big;
 end;
+
+# Returns the conjugate transpose of a matrix
+ConjugateTranspose := mat -> ComplexConjugate( TransposedMat( mat ) );

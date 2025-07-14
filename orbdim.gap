@@ -36,8 +36,6 @@ Imag:=function(z)
   return (z-ComplexConjugate(z))/(2*i);
 end;
 
-ConjugateTranspose:=mat->ComplexConjugate(TransposedMat(mat));
-
 bracket:=function(a,b)
   return a*b - b*a;
 end;
