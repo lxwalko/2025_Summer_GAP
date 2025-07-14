@@ -36,6 +36,7 @@ singlet := invroot2 * [ 0, 1, -1, 0 ];
 ######
 
 # BlanksString() is a helper function for PrintMatrix
+# Returns a list of n spaces
 BlanksString := function( n )
     return Concatenation( List( [1..n], i -> " " ) );
 end;
