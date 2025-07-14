@@ -126,7 +126,7 @@ end;
 # Returns C(I) where I = bitstring
 ###
 CofI := function( bitstring )
-    local k, sum, alpha, rootUnity, n;
+    local k, sum, rootUnity, n;
 
     n := Length( bitstring );
 
