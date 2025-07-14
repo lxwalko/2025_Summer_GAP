@@ -39,5 +39,5 @@ in this repo are collected in one place so only one file needs to be read. No me
 `utilities.gap` begins with the definitions of some commonly used constants and operators, such as the Paulis.  
   
 `BlanksString( n )`:  
-    Input: n is a positive integer  
-    Output: A list with length n, each element is the space character, `" "`
+- Input: n is a positive integer  
+- Output: A list with length n, each element is the space character, `" "`
