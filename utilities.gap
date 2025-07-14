@@ -135,11 +135,14 @@ Swap := function( lst, index1, index2 )
     lst[ index2 ] := temp;
 end;
 
+# Returns the conjugate transpose of a matrix
+ConjugateTranspose := mat -> ComplexConjugate( TransposedMat( mat ) );
+
 ###
 # REQUIRES "orbdim.gap"
 # Returns <a|b>
 ###
-InnerProduct := function( a, b )
+InnerProductMats := function( a, b )
     return Trace( ConjugateTranspose( a ) * b );
 end;
 
@@ -191,6 +194,3 @@ FindMax := function( matrix )
 
     return big;
 end;
-
-# Returns the conjugate transpose of a matrix
-ConjugateTranspose := mat -> ComplexConjugate( TransposedMat( mat ) );

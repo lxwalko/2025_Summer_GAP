@@ -559,7 +559,7 @@ z:=Indeterminate(Rationals,"z");
 
 ########### Intermediate Utilities ####################
 
-InnerProductOld:=function(cvec1,cvec2)
+InnerProduct:=function(cvec1,cvec2)
   return ComplexConjugate(cvec1)*cvec2;
 end;
 
