@@ -17,46 +17,6 @@
 
 Print( "Read ncp_hyper.gap" );
 
-###
-# Takes a list of 0s and 1s such as
-# [ 1, 0, 0, 1, 1]
-# Returns the tensor product of
-# ketzeros and ketones in given order
-###
-BitstringTensor := function( bitstring )
-    local res, bit;
-
-    res := [ [1] ];
-
-    for bit in bitstring do
-
-        if bit = 1 then
-            res := KroneckerProduct( res, ketone );
-        else
-            res := KroneckerProduct( res, ketzero );
-        fi;
-    od;
-
-    return normalize( res );
-end;
-
-###
-# Retuns a list of ditstrings that count from 0 to base^numDigits - 1
-# Function is a binary counting algorithm expanded to all bases
-###
-BaseNCounting := function( base, numDigits )
-    local i, value, ditStrings;
-
-    ditStrings := [];
-
-    for i in [0..(base^numDigits - 1)] do
-        value := dec2baseNlist( i, base, numDigits );
-        Add( ditStrings, value );
-    od;
-
-    return ditStrings;
-end;
-
 ########## Hypergraph and Non-Crossing Chord Methods ##########
 
 ###
@@ -155,6 +115,32 @@ StatesToMatrices := function( states )
         Print( "\n\n" );
     od;
 
+end;
+
+###
+# REQUIRES "orbdim.gap"
+#
+# Bitstring is a list of 0s and 1s such as
+# [ 1, 0, 0, 1, 1]
+#
+# Returns C(I) where I = bitstring
+###
+CofI := function( bitstring )
+    local k, sum, alpha, rootUnity, n;
+
+    n := Length( bitstring );
+
+    rootUnity := E( n );
+
+    sum := 0;
+
+    for k in [0..(n - 1)] do
+        prod := BitstringTensor( VirginiaCycleK( k, bitstring ) );
+
+        sum := sum + ( rootUnity^k * prod );
+    od;
+
+    return normalize( sum );
 end;
 
 ###
@@ -356,32 +342,6 @@ SplitNCP := function( lsts )
     od;
 
     return res;
-end;
-
-###
-# REQUIRES "orbdim.gap"
-#
-# Bitstring is a list of 0s and 1s such as
-# [ 1, 0, 0, 1, 1]
-#
-# Returns C(I) where I = bitstring
-###
-CofI := function( bitstring )
-    local k, sum, alpha, rootUnity, n;
-
-    n := Length( bitstring );
-
-    rootUnity := E( n );
-
-    sum := 0;
-
-    for k in [0..(n - 1)] do
-        prod := BitstringTensor( VirginiaCycleK( k, bitstring ) );
-
-        sum := sum + ( rootUnity^k * prod );
-    od;
-
-    return normalize( sum );
 end;
 
 ###
@@ -714,7 +674,7 @@ end;
 ###
 # Creates Linear States from Eigenstates Matrix
 #
-# Each i,j entry
+# Each i,j entry where D = diagram is <psi_Di | rho_Dj | psi_Di>
 ###
 CreateLSEMatrix := function( numQubits )
     local diagrams, polygonOperators, stateVecs, matrix, row, operator, state;
