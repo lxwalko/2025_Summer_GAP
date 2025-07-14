@@ -12,3 +12,5 @@ Read("werner.gap");Print("\n");
 Read("utilities.gap");Print("\n");
 
 Read("ncp_hyper.gap");Print("\n");
+
+Read("lin_from_eigen.gap");

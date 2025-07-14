@@ -2,6 +2,8 @@
 ## Linear States from Eigenvectors Code
 #######################################
 
+Print("Read lin_from_eigen.gap");
+
 ###
 # REQUIRES "orbdim.gap"
 # Returns the 'dopey string' of a given polygon diagram
