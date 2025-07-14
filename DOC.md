@@ -22,7 +22,7 @@ confusion that some of these terms caused me.
 - `binlist`: A binary list
 - `lsts`: A list of lists; often used to describe the chords / polygons of an NCC or NCP diagram. This may also refer to a matrix
 - `dm`: Density matrix
-- `cvec`: Sometimes `colvec` means Column vector; represented by a list
+- `cvec`: Sometimes `colvec` means column vector; represented by a list
 - `res`: The result / return value of a function
 - `rootUnity`: A root of unity
 - `perm`: A permutation; written in cycle notation, as this is the format recognized by GAP
