@@ -671,6 +671,7 @@ CompareDiagrams := function( diagramOne, diagramTwo )
     fi;
     return true;
 end;
+
 ###
 # Creates Linear States from Eigenstates Matrix
 #

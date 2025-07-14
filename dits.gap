@@ -2,6 +2,8 @@
 ## Bits and Bitstrings / Dits and Ditstrings
 #####
 
+Print("Read dits.gap");
+
 ###
 # Takes a list of 0s and 1s such as
 # [ 1, 0, 0, 1, 1]

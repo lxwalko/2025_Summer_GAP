@@ -342,84 +342,6 @@ display:=function(data)
   od;
 end;
 
-###
-# e() returns a list with length 2^num where the
-# entry in the bin + 1 position is 1, all else 0
-##
-e := function( num, bin )
-    local v,count;
-
-    v := [ 0 ];
-    for count in [1..num] do
-        Append( v, v );
-    od;
-
-    v[ bin + 1 ] := 1;
-
-    return v;
-end;
-
-eDit := function( dim, pow, pos )
-    local res;
-
-    res := List( [1..dim^pow], i -> 0 );
-
-    res[ pos + 1 ] := 1;
-
-    return res;
-end;
-
-###
-# Bin() returns the binary** sum of a vector
-# Bin() does not require 1s and 0s. It works for any vector with numbers
-# For example: Bin( [1, 2] ) = (2^(1) * 1) + (2^(0) * 2) = 4
-###
-
-Bin := function( vec )
-    local place, dec;
-
-    dec := 0;
-
-    for place in [1..Length( vec )] do
-        dec := dec + 2^(Length( vec ) - place) * vec[ place ];
-    od;
-
-    return dec;
-end;
-
-###
-# BaseN() is a generalized form of Bin() for base N
-###
-
-BaseN := function( base, vec )
-    local place, total;
-
-    total := 0;
-
-    for place in [1..Length( vec )] do
-        total := total + base^(Length( vec ) - place) * vec[place];
-    od;
-
-    return total;
-end;
-
-OneBinList := function( k, n )
-# return binlist of length n with 1 in position k, 0 elsewhere
-    local bit,binlist;
-
-    binlist:=[];
-
-    for bit in [1..n] do
-        if bit = k then
-            Append( binlist, [ 1 ] );
-        else
-            Append( binlist, [ 0 ] );
-        fi;
-    od;
-
-    return binlist;
-end;
-
 # functional version of OneBinList
 OneBinListF:=function(k,n)
 # return binlist of length n with 1 in position k, 0 elsewhere
@@ -487,113 +409,9 @@ SubsetList:=function(n)
   end;
   return FlattenOneLevel(List([0..n],combos));
 end;
-
 # Example:
 # gap> SubsetList(3);
 # [ [  ], [ 1 ], [ 2 ], [ 3 ], [ 1, 2 ], [ 1, 3 ], [ 2, 3 ], [ 1, 2, 3 ] ]
-
-###
-# dec2binlist returns the binary expansion of a number in a given number of qubits
-# For example:
-# gap> dec2binlist( 5, 5 );
-# [ 0, 0, 1, 0, 1 ]
-#
-# As 5 = 00101 in binary using 5 places
-###
-
-dec2binlist := function( dec, numqubits )
-    local bit, binlist, remainder, place;
-
-    binlist := [];
-    remainder := dec;
-
-    for bit in [1..numqubits] do
-        place := 2^( numqubits-bit );
-
-        if remainder >= place then
-            Append( binlist, [ 1 ] );
-            remainder := remainder - place;
-        else
-            Append( binlist, [0] );
-        fi;
-    od;
-
-    return binlist;
-end;
-
-dec2base4list:=function(dec,numqubits)
-  local bit,b4list,remainder,place,digit;
-  b4list:=[];
-  remainder:=dec;
-  for bit in [1..numqubits] do
-    place:=4^(numqubits-bit);
-    digit:=Int(remainder/place);
-    remainder:=remainder - digit*place;
-    Append(b4list,[digit]);
-  od;
-  return b4list;
-end;
-
-###
-# dec2baseNlist() works in the same manner as dec2binlist()
-# However, it returns answers in base N rather than base 2
-# numdigits is length of the ditstring
-# The call dec2baseNlist( 3, 4, 6 ) means:
-#   Express 3 in a base 4 ditstring of length 6
-#
-# See description of dec2binlist() for an example
-###
-
-dec2baseNlist := function( dec, N, numdigits )
-    local pos, list, remainder, place, digit;
-
-    list := [];
-    remainder := dec;
-
-    for pos in [1..numdigits] do
-        place := N^( numdigits - pos );
-        digit := Int( remainder / place );
-        remainder := remainder - (digit * place);
-
-        Append( list, [ digit ] );
-    od;
-
-    return list;
-end;
-
-DecOfBinstring := function( binstring )
-    local place, bit, dec;
-
-    dec := 0;
-    place := Length( binstring );
-
-    for bit in binstring do
-        place := place - 1;
-        dec := dec + Int( [bit] ) * 2^place;
-    od;
-
-    return dec;
-end;
-
-CompositeBitlist := function( subsystem, list0, list1 )
-    local i0, i1, bit, comp;
-
-    i0:=1;
-    i1:=1;
-    comp:=[];
-
-    for bit in subsystem do
-        if bit = 0 then
-            Append( comp, [ list0[ i0 ] ] );
-            i0 := i0 + 1;
-        else
-            Append( comp, [ list1[ i1 ] ] );
-            i1 := i1 + 1;
-        fi;
-    od;
-
-    return comp;
-end;
 
 flatten:=function(mat)
   local vec,row;
@@ -646,43 +464,6 @@ Kron:=function(list)
     cummat:=KroneckerProduct(cummat,mat);
   od;
   return cummat;
-end;
-
-###
-# BitSize() returns log_2( Length( list ) )
-# or log base 2 of the length of a list
-###
-
-BitSize := function( lst )
-# works for state vectors also
-  return LogInt( Length( lst ), 2 );
-end;
-
-###
-# DitSize() returns log_d( Length( list ) )
-# or log base d of the length of a list
-###
-
-DitSize := function( d, lst )
-    return LogInt( Length( lst ), d );
-end;
-
-BitComplement := function( binlist )
-    local bit, complist;
-
-    complist:=[];
-
-    for bit in binlist do
-        if bit = 0 then
-            Add( complist, 1 );
-        elif bit = 1 then
-            Add( complist, 0 );
-        else
-            Error("BitComplement:  bad binlist");
-        fi;
-    od;
-
-    return complist;
 end;
 
 ComponentWithBitString := function(bitString,psi)
@@ -1403,45 +1184,6 @@ IsSquareMat := function( matrix )
     return false;
 end;
 
-###
-# I wish I knew what this function did in detail
-# I know it's a general from of Pad() for local dimension dim
-# Ask Dr. Walck about Pad(), I guess
-###
-PadN := function( dim, dinList, densityMatrix )
-    local n, sum, term, baseDim2Lst, coeff, bDimLstCounter, bigBDimLst, dit;
-
-    n := DitSize( dim, densityMatrix );
-
-    if Count( 0, dinList ) <> n then
-        Error("Error: PadN: size mismatch");
-    fi;
-
-    sum := 0;
-    for term in [0..dim^(2*n)-1] do
-        Display(dim^(2*n)-1);
-
-        baseDim2Lst := dec2baseNlist( term, dim, n );
-        coeff := PauliCoeff( baseDim2Lst, densityMatrix );
-        bDimLstCounter := 0;
-        bigBDimLst := [];
-
-        for dit in dinList do
-            if dit = 0 then
-                bDimLstCounter := bDimLstCounter + 1;
-                Add( bigBDimLst, baseDim2Lst[ bDimLstCounter ] );
-            elif dit = 1 then
-                Add( bigBDimLst, 0 );
-            else
-                Display("Error: PadN: bad dinList");
-            fi;
-        od;
-        sum := sum + coeff * Kron( List( bigBDimLst, x->HalfPauli( x ) ) );
-    od;
-
-    return sum;
-end;
-
 OrderedKron:=function(binlist,dm0,dm1)
   local n0,n1;
   n0:=BitSize(dm0);
@@ -1485,34 +1227,6 @@ OrderedKronList := function( partition, dmlst )
     return result;
 end;
 
-###
-# General form of OrderedKronList() for qudits
-# dim is local dimension
-# partition is a list of lists that describes the polygons of the NCP diagram
-# statesLst is a list of the states that correspond
-###
-OrderedKronListQudits := function( dim, partition, statesLst )
-    local i, res, numQudits;
-
-    Assert( 0, Length( partition ) = Length( statesLst ) );
-
-    for i in [1..Length( partition )] do
-        Assert( 0, Length( partition[ i ] ) = DitSize( dim, statesLst[ i ] ) );
-    od;
-
-    Assert( 0, IsPartitionOfN( partition ) );
-    numQudits := Length( Flat( partition ) );
-
-    res := IdentityMat( dim^numQudits );
-
-    for i in [1..Length( partition )] do
-        Display( BitComplement( QubitSet2BinarySubsystem( numQudits, partition[ i ] )) );Display("\n");
-        res := res * dim^( numQudits - Length( partition[ i ] ))
-                 * PadN( dim, BitComplement( QubitSet2BinarySubsystem( numQudits, partition[ i ] )), statesLst[ i ] );
-    od;
-
-    return res;
-end;
 # gap> OrderedKronList([[1,3],[2]],[DMn(singlet),DMn(e0)]);
 # [ [ 0, 0, 0, 0, 0, 0, 0, 0 ], [ 0, 1/2, 0, 0, -1/2, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 0, 0, 0 ],
 #   [ 0, 0, 0, 0, 0, 0, 0, 0 ], [ 0, -1/2, 0, 0, 1/2, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 0, 0, 0 ],
@@ -1579,7 +1293,6 @@ end;
 # perm is a GAP permutation
 # GAP permutations are written in cycle notation
 ###
-
 PermuteList := function( lst, perm )
     local newlst, i;
     newlst := [];
@@ -1596,7 +1309,6 @@ end;
 # Returns a vector with qubits permuted according to perm
 # Perm is a gap permutation (Written in cycle notation)
 ###
-
 PermuteQubitsPsi := function( cvec, perm )
     local n, newvec, item;
 

@@ -3,6 +3,8 @@ SetFloats(MPFR, 128);
 
 Print("\n");
 
+Read("dits.gap");Print("\n");
+
 Read("orbdim.gap");Print("\n");
 
 Read("werner.gap");Print("\n");
