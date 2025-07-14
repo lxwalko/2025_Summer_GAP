@@ -1,10 +1,10 @@
 # LVC MathPhys Research Code
-#### An attempt at organization
+### An attempt at organization
 
 Much of the code is disorganized and undocumented, this GitHub repo is the beginning of an  
 attempt to rectify that.  
 
-##### How to use
+#### How to use
 
 *Assuming you have GAP downloaded, installed, and working*  
     *To do so, visit* https://www.gap-system.org/    
