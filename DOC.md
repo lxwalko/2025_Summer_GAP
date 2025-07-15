@@ -138,4 +138,8 @@ integer specifying the number of digits in each ditstring.
   
 `BitSize( lst )`:
 - Input: `lst` is a list.
-- Output: log<sub>2</sub>(`Length( lst )`). 
+- Output: log<sub>2</sub>(`Length( lst )`) rounded down to the nearest integer.
+  
+`DitSize( d, lst )`:
+- Input: `d` is an integer specifying the base. `lst` is a list.
+- Output: log<sub>d</sub>(`Length( lst )`) rounded down to the nearest integer.
