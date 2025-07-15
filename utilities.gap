@@ -35,6 +35,9 @@ singlet := invroot2 * [ 0, 1, -1, 0 ];
 ### Methods
 ######
 
+# GAP's not is not a function
+Not := b -> not b;
+
 # BlanksString() is a helper function for PrintMatrix
 # Returns a list of n spaces
 BlanksString := function( n )

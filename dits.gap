@@ -29,23 +29,6 @@ BitstringTensor := function( bitstring )
 end;
 
 ###
-# Retuns a list of ditstrings that count from 0 to base^numDigits - 1
-# Function is a binary counting algorithm expanded to all bases
-###
-BaseNCounting := function( base, numDigits )
-    local i, value, ditStrings;
-
-    ditStrings := [];
-
-    for i in [0..(base^numDigits - 1)] do
-        value := dec2baseNlist( i, base, numDigits );
-        Add( ditStrings, value );
-    od;
-
-    return ditStrings;
-end;
-
-###
 # BitSize() returns log_2( Length( list ) )
 # or log base 2 of the length of a list
 ###
@@ -263,4 +246,21 @@ BaseN := function( base, vec )
     od;
 
     return total;
+end;
+
+###
+# Retuns a list of ditstrings that count from 0 to base^numDigits - 1
+# Function is a binary counting algorithm expanded to all bases
+###
+BaseNCounting := function( base, numDigits )
+    local i, value, ditStrings;
+
+    ditStrings := [];
+
+    for i in [0..(base^numDigits - 1)] do
+        value := dec2baseNlist( i, base, numDigits );
+        Add( ditStrings, value );
+    od;
+
+    return ditStrings;
 end;

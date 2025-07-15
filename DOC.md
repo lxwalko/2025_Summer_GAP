@@ -46,6 +46,10 @@ The functions found in this file are commonly used throughout the rest of the co
   
 ### Functions
   
+`Not( b )`:
+- Input: `b` is a boolean value.
+- Output: The opposite boolean value of `b`.
+  
 `BlanksString( n )`:  
 - Input: `n` is a nonnegative integer.
 - Output: A list with length `n`, each element is the space character, `" "`.
@@ -131,11 +135,6 @@ counting, ditstring generation, bitstring tensors, etc. are found here.
 - Input: `bitstring` is a list of zeros and ones.
 - Output: The normalized state vector born out of ket-`bitstring`.
   
-`BaseNCounting( base, numDigits )`:
-- Input: `base` is an integer denoting the base of the counting (such as base 2, base 3, etc.). `numDigits` is a nonnegative
-integer specifying the number of digits in each ditstring.
-- Output: A list of ditstrings that count from `0` to `base^(numDigits - 1)`.
-  
 `BitSize( lst )`:
 - Input: `lst` is a list.
 - Output: log<sub>2</sub>(`Length( lst )`) rounded down to the nearest integer.
@@ -192,6 +191,11 @@ multiplied by increasing powers of two starting from the right.
 - Input: `vec` is a vector of integers. `base` is an integer.
 - Output: The base `base` sum of the entries in `vec`.
 - Note: `BaseN` is the general form of `Bin`.
+  
+`BaseNCounting( base, numDigits )`:
+- Input: `base` is an integer denoting the base of the counting (such as base 2, base 3, etc.). `numDigits` is a nonnegative
+integer specifying the number of digits in each ditstring.
+- Output: A list of ditstrings that count from `0` to `base^(numDigits - 1)`.
 
 ## werner.gap
 

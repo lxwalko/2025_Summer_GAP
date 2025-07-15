@@ -395,51 +395,6 @@ TraceOutNGon := function( numQubits )
 end;
 
 ###
-# REQUIRES "orbdim.gap"
-# Generates 2^n by 2^n permutation matrices
-# perm is a permutation written in cycle notation
-###
-PermMatGen := function( n, perm )
-    local M, N, row;
-
-    M := IdentityMat( 2^n );
-
-    N := [];
-
-    for row in M do
-        Add( N, PermuteQubitsPsi( row, perm ) );
-    od;
-
-    # return TransposedMat( N );
-    return N;
-
-end;
-
-###
-# REQUIRES "orbdim.gap"
-# Generates dim^n by dim^n permutation matrices
-# perm is a permutation written in cycle notation
-###
-PermMatGenQudits := function( dim, n, perm )
-    local M, N, row;
-
-    M := IdentityMat( dim^n );
-
-    N := [];
-
-    for row in M do
-        Add( N, PermuteQudits( dim, row, perm ) );
-    od;
-
-    return N;
-
-end;
-
-# At this point I have to apologize for the endless scroll of poorly written code
-# It does its job but I don't trust you to keep track of one dependency, let alone
-# the ten it would take to make this pretty
-
-###
 # REQUIRES FLOAT PACKAGE
 # Returns the decimal representations
 #
@@ -468,55 +423,6 @@ TraceOutNGonDecimal := function( numQubits )
 
     # Return decimals in same pattern as TraceOutNGon() output
     return [ decLst[ pos ], decLst ];
-end;
-
-###
-# REQUIRES "orbdim.gap"
-# Returns density matrix of a numQudits-Gon diagram in local dimension dim
-###
-WernerGonQudits := function( dim, numQudits )
-    local res, sz;
-
-    sz := dim^numQudits - 1;
-
-    res := Sum( List( [0..sz], x->DM( RootCycleQudits( dim, eeDit( dim, dec2baseNlist( x, dim, numQudits ))))));
-
-    return normalizeDM( res );
-end;
-
-###
-# REQUIRES "orbdim.gap"
-# WernerDiagramQudits is the general form of WernerDiagram()
-# lsts is a list of lists, dim is the local dimension
-# Function returns rho of the specified diagram state
-###
-WernerDiagramQudits := function( dim, lsts )
-    local flatLsts, numQudits, densityMatrices, res, gon, permMatrices, permMatrix, perm, perms;
-
-    # Flatten lsts and find numQudits in diagram
-    flatLsts := Flat( lsts );
-    numQudits := Length( flatLsts );
-
-    # Checks that lsts has as many qudits as the maximum of lsts
-    Assert( 0, SortedList( flatLsts ) = [1..numQudits] );
-
-    densityMatrices := [];
-
-    # Adds the n-gon state for each polygon in the diagram to a list
-    for gon in lsts do
-        Add( densityMatrices, WernerGonQudits( dim, Length( gon ) ) );
-    od;
-
-    res := Kron( densityMatrices );
-
-    # Creates partial permutation mapping [1..numQudits] to flatLsts
-    # Ex: PartialPerm([1..5], Flat( [[1,2,5], [3,4]] )) = (1)(2)(3,5,4)
-    # Technically the [1..5] is superfluous, but I've kept it for clarity
-    perm := PartialPerm( [1..numQudits], flatLsts );
-
-    permMatrix := PermMatGenQudits( dim, numQudits, perm );
-
-    return permMatrix^(-1) * res * permMatrix;
 end;
 
 ###
