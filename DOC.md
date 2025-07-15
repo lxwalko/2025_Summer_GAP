@@ -129,4 +129,13 @@ counting, ditstring generation, bitstring tensors, etc. are found here.
   
 `BitstringTensor( bitstring )`:
 - Input: `bitstring` is a list of zeros and ones.
-- Output: The normalized state vector born out of |`bitstring`>.
+- Output: The normalized state vector born out of ket-`bitstring`.
+  
+`BaseNCounting( base, numDigits )`:
+- Input: `base` is an integer denoting the base of the counting (such as base 2, base 3, etc.). `numDigits` is a nonnegative
+integer specifying the number of digits in each ditstring.
+- Output: A list of ditstrings that count from `0` to `base^(numDigits - 1)`.
+  
+`BitSize( lst )`:
+- Input: `lst` is a list.
+- Output: $\log_2{`Length( lst )`}$. 
