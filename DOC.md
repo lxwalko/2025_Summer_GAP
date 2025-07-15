@@ -53,7 +53,7 @@ The functions found in this file are commonly used throughout the rest of the co
 `PrintMatrix( matrix )`:
 - Input: `matrix` is a matrix, or a list of lists.
 - Output: A "neatly" formatted representation of `matrix` is printed to the terminal.
-- Note: On large matrices, `PrintMatrix` makes the output uglier than it would be normally.
+- Note: On large matrices, `PrintMatrix` makes the output uglier than the unmodified output.
   
 `NonZeroLocations( matrix )`:
 - Input: `matrix` is a matrix, or a list of lists.
@@ -142,4 +142,34 @@ integer specifying the number of digits in each ditstring.
   
 `DitSize( d, lst )`:
 - Input: `d` is an integer specifying the base. `lst` is a list.
-- Output: log<sub>d</sub>(`Length( lst )`) rounded down to the nearest integer.
+- Output: log<sub>`d`</sub>(`Length( lst )`) rounded down to the nearest integer.
+  
+`BitComplement( binlist )`:
+- Input: `binlist` is a binary list; a list of zeros and ones.
+- Output: A binary list where each one in `binlist` becomes a zero in the return list, and vice versa. 
+For example, `BitComplement( [1, 0, 0, 1] )` -> `[0, 1, 1, 0]`.
+  
+`dec2binlist( dec, numqubits )`:
+- Input: `dec` and `numqubits` are nonnegative integers.
+- Output: A binary list of length `numqubits`, which evaluates to `dec` when converted to base 10.
+  
+`dec2base4list( dec, numqubits )`:
+- Input: `dec` and `numqubits` are nonnegative integers.
+- Output: A base 4 list of length `numqubits`, which evaluates to `dec` when converted to base 10.
+  
+`dec2baseNlist( dec, N, numdigits )`:
+- Input: `dec`, `N`, and `numdigits` are nonnegative integers.
+- Output: A base `N` list of length `numdigits`, which evaluates to `dec` when converted to base 10.
+  
+`DecOfBinstring( binstring )`:
+- Input: `binstring` is a binary string.
+- Output: The base 10 value of `binstring`.
+  
+`CompositeBitlist( subsystem, list0, list1 )`:
+- Input: `subsystem` is a binary list. `list0` and `list1` are lists. All lists have equal length.
+- Output: A list with the same length as `subsystem`, created by inserting entries from `list0` when the corresponding bit
+in `subsystem` is zero, and inserting from `list1` when the corresponding bit is one.
+  
+`OneBinList( k, n )`:
+- Input: `k` and `n` are nonnegative integers.
+- Output: A binary list of length `n` with a one in position `k`, all zeros elsewhere.

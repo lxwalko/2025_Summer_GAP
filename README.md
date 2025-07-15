@@ -7,7 +7,7 @@ attempt to rectify that.
 ### How to use
 
 *Assuming you have GAP downloaded, installed, and working.*  
-    *To do so, visit* https://www.gap-system.org/    
+    *To do so, visit the [GAP website](https://www.gap-system.org/)*    
     
 1. Start GAP from the terminal with the command `gap`
 2. Change directory to where this code is saved with the command `ChangeDirectoryCurrent( "filepath" );`

@@ -112,17 +112,20 @@ dec2binlist := function( dec, numqubits )
     return binlist;
 end;
 
-dec2base4list:=function(dec,numqubits)
-  local bit,b4list,remainder,place,digit;
-  b4list:=[];
-  remainder:=dec;
-  for bit in [1..numqubits] do
-    place:=4^(numqubits-bit);
-    digit:=Int(remainder/place);
-    remainder:=remainder - digit*place;
-    Append(b4list,[digit]);
-  od;
-  return b4list;
+dec2base4list := function( dec, numqubits )
+    local bit, b4list, remainder, place, digit;
+    
+    b4list := [];
+    remainder := dec;
+    
+    for bit in [1..numqubits] do
+        place := 4^( numqubits - bit );
+        digit := Int( remainder / place );
+        remainder := remainder - digit * place;
+        Append( b4list, [ digit ] );
+    od;
+    
+    return b4list;
 end;
 
 ###
@@ -151,6 +154,7 @@ dec2baseNlist := function( dec, N, numdigits )
     return list;
 end;
 
+# Evaluates a bitstring in base 10
 DecOfBinstring := function( binstring )
     local place, bit, dec;
 
@@ -176,7 +180,7 @@ CompositeBitlist := function( subsystem, list0, list1 )
         if bit = 0 then
             Append( comp, [ list0[ i0 ] ] );
             i0 := i0 + 1;
-        else
+        else # if bit = 1
             Append( comp, [ list1[ i1 ] ] );
             i1 := i1 + 1;
         fi;
