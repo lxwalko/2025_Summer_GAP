@@ -173,3 +173,26 @@ in `subsystem` is zero, and inserting from `list1` when the corresponding bit is
 `OneBinList( k, n )`:
 - Input: `k` and `n` are nonnegative integers.
 - Output: A binary list of length `n` with a one in position `k`, all zeros elsewhere.
+  
+`e( num, bin )`:
+- Input: `num` and `bin` are nonnegative integers.
+- Output: A list of length 2^`num` where the entry in position `bin`+1 is one, all zeros elsewhere.
+
+`eDit( dim, pow, pos )`:
+- Input: `dim`, `pos`, and `pos` are nonnegative integers.
+- Output: A list of length `dim^pow` where the entry in position `pos`+1 is one, all zeros elsewhere.
+
+`Bin( vec )`:
+- Input: `vec` is a vector of integers.
+- Output: The binary sum of the entries in `vec`.
+- Note: `Bin` does not require the entries of `vec` to be ones and zeros. `Bin` is the sum of the entries in `vec`
+multiplied by increasing powers of two starting from the right.
+
+`BaseN( base, vec )`:
+- Input: `vec` is a vector of integers. `base` is an integer.
+- Output: The base `base` sum of the entries in `vec`.
+- Note: `BaseN` is the general form of `Bin`.
+
+## werner.gap
+
+`werner.gap` contains the code necessary to create and experiment upon Werner states.
