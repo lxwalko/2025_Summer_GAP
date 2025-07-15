@@ -138,4 +138,4 @@ integer specifying the number of digits in each ditstring.
   
 `BitSize( lst )`:
 - Input: `lst` is a list.
-- Output: $\log_2{`Length( lst )`}$. 
+- Output: log~2~(`Length( lst )`). 
