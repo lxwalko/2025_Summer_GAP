@@ -22,7 +22,7 @@ confusion that some of these terms caused me.
 - `binlist`: A binary list
 - `lsts`: A list of lists; often used to describe the chords / polygons of an NCC or NCP diagram. This may also refer to a matrix
 - `dm`: Density matrix
-- `cvec`: Sometimes `colvec` means column vector; represented by a list
+- `cvec`: A vector; represented by a list
 - `res`: The result / return value of a function
 - `rootUnity`: A root of unity
 - `perm`: A permutation; written in cycle notation, as this is the format recognized by GAP
@@ -42,6 +42,7 @@ in this repo are collected in one place so only one file needs to be read. No me
 ## utilities.gap
 
 `utilities.gap` begins with the definitions of some commonly used constants and operators, such as the Paulis.  
+The functions found in this file are commonly used throughout the rest of the code in the repo.  
   
 ### Functions
   
@@ -78,6 +79,10 @@ from NCP diagrams.
 - Input: `a` and `b` are square matrices.
 - Output: A scalar value, the inner product of `a` and `b`.
   
+`virginiaCycleList( xs )`:
+- Input: `xs` is a list.
+- Output: A list where the first entry of `xs` is moved to the end, and all other elements are moved up one position.
+  
 `VirginiaCycleK( k, lst )`:
 - Input: `k` is a positive integer, `lst` is a list.
 - Output: A list where the first element of `lst` has been cycled to the back `k` times.
@@ -90,3 +95,38 @@ from NCP diagrams.
 `FindMax( matrix )`:
 - Input: `matrix` is a matrix.
 - Output: The maximum value of `mat`.
+  
+`InnerProduct( cvec1, cvec2 )`:
+- Input: `cvec1` and `cvec2` are vectors. 
+- Output: A scalar value --  the inner product of the two vectors.
+  
+`OuterProduct( cvec1, cvec2 )`:
+- Input: `cvec1` and `cvec2` are vectors.
+- Output: A matrix -- the outer product of the two vectors.
+  
+`DM( cvec )`:
+- Input: `cvec` is a vector.
+- Output: The density matrix formed by the outer product of `cvec` and itself.
+  
+`norm( cvec )`:
+- Input: `cvec` is a vector.
+- Output: The normalization factor of `cvec`.
+  
+`normalize( cvec )`:
+- Input: `cvec` is a vector.
+- Output: The normalized form of `cvec`.
+  
+`normalizeDM( dm )`:
+- Input: `dm` is a density matrix.
+- Output: The normalized form of `dm`.
+
+## dits.gap
+
+`dits.gap` contains methods that pertain mostly to bits, bitstrings, dits, and ditstrings. Methods for binary or n-ary 
+counting, ditstring generation, bitstring tensors, etc. are found here.  
+  
+### Functions
+  
+`BitstringTensor( bitstring )`:
+- Input: `bitstring` is a list of zeros and ones.
+- Output: The normalized state vector born out of |`bitstring`>.

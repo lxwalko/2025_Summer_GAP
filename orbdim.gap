@@ -559,51 +559,6 @@ z:=Indeterminate(Rationals,"z");
 
 ########### Intermediate Utilities ####################
 
-InnerProduct:=function(cvec1,cvec2)
-  return ComplexConjugate(cvec1)*cvec2;
-end;
-
-OuterProduct:=function(cvec1,cvec2)
-#    depends on ConjugateTranspose
-  local colvec1,rowvec2;
-  colvec1:=TransposedMat([cvec1]);
-  rowvec2:=[ComplexConjugate(cvec2)];
-  return colvec1*rowvec2;
-end;
-
-###
-# DM for density matrix
-# constructs density matrix for vector cvec
-###
-DM := function( cvec )
-#    depends on ConjugateTranspose
-  local colvec;
-  colvec := TransposedMat( [ cvec ] );
-  return colvec * ConjugateTranspose( colvec );
-end;
-
-norm:=function(cvec)
-  local sum,elt;
-  sum:=0;
-  for elt in cvec do
-    sum:=sum+elt*ComplexConjugate(elt);
-  od;
-  return Sqrt(sum);
-end;
-
-normalize:=function(cvec)
-#    uses norm
-  return cvec/norm(cvec);
-end;
-
-###
-# Returns normalized density matrix
-# TraceMat( normalizeDM( matrix ) ) = 1
-###
-normalizeDM:=function(dm)
-  return dm/TraceMat(dm);
-end;
-
 DMn:=function(cvec)
   return normalizeDM(DM(cvec));
 end;
@@ -3263,12 +3218,6 @@ end;
 #################
 ### Werner stuff
 #################
-
-###
-# virginiaCycleList( [] ) takes a list, and moves the first entry to the end while advancing all other entries up one position
-###
-
-virginiaCycleList := xs -> Concatenation(xs{[2..Length(xs)]},xs{[1]});
 
 # gap> virginiaCycleList([1,1,1,1,0,0,0,0]);
 # [ 1, 1, 1, 0, 0, 0, 0, 1 ]

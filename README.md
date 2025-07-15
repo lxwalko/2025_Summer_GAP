@@ -13,4 +13,4 @@ attempt to rectify that.
 2. Change directory to where this code is saved with the command `ChangeDirectoryCurrent( "filepath" );`
 3. Read all the code in this codebase using the command `Read( "load.gap" );`  *Or you can read individual files with* `Read( "filename" );`
   
-Documentation (where applicable) is written in the source files. More organized documentation can be found in the DOC.md file -- if and when I get to it.
+Documentation (where applicable) is written in the source files. More organized documentation can be found in the `DOC.md` file.

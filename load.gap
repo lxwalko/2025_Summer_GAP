@@ -5,11 +5,11 @@ Print("\n");
 
 Read("dits.gap");Print("\n");
 
+Read("utilities.gap");Print("\n");
+
 Read("orbdim.gap");Print("\n");
 
 Read("werner.gap");Print("\n");
-
-Read("utilities.gap");Print("\n");
 
 Read("ncp_hyper.gap");Print("\n");
 

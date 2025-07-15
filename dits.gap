@@ -5,6 +5,7 @@
 Print("Read dits.gap");
 
 ###
+# REQUIRES "orbdim.gap"
 # Takes a list of 0s and 1s such as
 # [ 1, 0, 0, 1, 1]
 # Returns the tensor product of
