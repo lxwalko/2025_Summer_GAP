@@ -78,6 +78,40 @@ PermMatGenQudits := function( dim, n, perm )
 
 end;
 
+# use (-j) power for Virginia reel cycling
+RootCycleV := function( psi )
+    local n, gen;
+
+    n := BitSize( psi );
+    gen := GeneratorsOfGroup( CyclicGroup( IsPermGroup, n ) )[ 1 ];
+
+    return Sum( List([0..n-1], j -> E(n)^j * PermuteQubitsPsi( psi, gen^( -j ))));
+end;
+
+###
+# General version of RootCycleV() for local dimension dim
+###
+RootCycleQudits := function( dim, lst )
+    local n, gen;
+
+    n := DitSize( dim, lst );
+    gen := GeneratorsOfGroup( CyclicGroup( IsPermGroup, n ) )[ 1 ];
+
+    return Sum( List( [0..n-1], j -> E(n)^j * PermuteQudits( dim, lst, gen^( -j ) )) );
+end;
+
+###
+# WernerGon(n) returns the conjugate of the Werner state of an n-vertex Non-Crossing-Polygon diagram
+# For example, WernerGon(3) returns the state represented by a triangle connecting qubits [1, 2, 3]
+###
+WernerGon := n ->
+  normalizeDM(Sum(List([0..2^n-1],composeList( [DM, RootCycle, ee, x->dec2binlist( x, n )] ))));
+
+# This is the complex conjugate of WernerGon
+# ( So the version of the Werner State you'd expect )
+WernerGonV := n ->
+  normalizeDM( Sum( List( [0..2^n-1], composeList( [ DM, RootCycleV, ee, x->dec2binlist( x, n ) ]))));
+  
 ###
 # REQUIRES "orbdim.gap"
 # Returns density matrix of a numQudits-Gon diagram in local dimension dim
@@ -90,6 +124,26 @@ WernerGonQudits := function( dim, numQudits )
     res := Sum( List( [0..sz], x->DM( RootCycleQudits( dim, eeDit( dim, dec2baseNlist( x, dim, numQudits ))))));
 
     return normalizeDM( res );
+end;
+
+###
+# WernerDiagram([ [ ] ]) takes a list of lists, for example: [ [1,2], [3] ]
+# Each sublist in the argument "lsts" describes the vertices of a polygon / chord / point
+# Using the above example, [1,2] is a chord between vertices 1 and 2, and [3] is vertex 3 by itself
+#
+# WernerDiagram() returns the density operator of the state
+###
+WernerDiagram := function( lsts )
+    local flat, n, dmlst, res;
+
+    flat := Concatenation( lsts );
+    n := Length( flat );
+    Assert( 0, SortedList( flat ) = [1..n] );
+    dmlst := List( lsts, compose( WernerGonV )( Length ));
+
+    res := OrderedKronList( lsts, dmlst );
+
+    return res;
 end;
 
 ###

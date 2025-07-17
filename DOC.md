@@ -66,11 +66,6 @@ entries of the form `[ row, col, value ]` where `row` and `col` are nonnegative 
 - Note: Outputs assume indexing starts at 0, as this code was made as a helper function for use outside of GAP. GAP
 begins indexing at 1.
   
-`IsIndependent( states )`:
-- Input: `states` is a matrix, assumed to be made of either state vectors from NCC diagrams, or flattened density matrices
-from NCP diagrams.
-- Output: Either `true` or `false`, depending on if the rows of `states` are linearly independent.
-  
 `Swap( lst, index1, index2 )`:
 - Input: `lst` is a list. `index1` is the index of the first element. `index2` is the index of the second element.
 - Output: Swaps the elements at `index1` and `index2` in place. Returns nothing.
@@ -123,6 +118,18 @@ from NCP diagrams.
 `normalizeDM( dm )`:
 - Input: `dm` is a density matrix.
 - Output: The normalized form of `dm`.
+
+`kron( vec1, vec2 )`:
+- Input: `vec1` and `vec2` are vectors.
+- Output: The kronecker ( or tensor ) product of `vec1` and `vec2`.
+
+`KronVec( list )`:
+- Input: `list` is a list of vectors.
+- Output: The kronecker product of every vector in `list`.
+
+`Kron( list )`:
+- Input: `list` is a list of matrices.
+- Output: The kronecker product of every matrix in `list`.
 
 ## dits.gap
 
@@ -180,6 +187,17 @@ in `subsystem` is zero, and inserting from `list1` when the corresponding bit is
 `eDit( dim, pow, pos )`:
 - Input: `dim`, `pos`, and `pos` are nonnegative integers.
 - Output: A list of length `dim^pow` where the entry in position `pos`+1 is one, all zeros elsewhere.
+
+`ee( lst )`:
+- Input: `lst` is a list.
+- Output: A list of length 2^`Length( lst )` where the entry in position `Bin( lst )`+1 is one, all zeros elsewhere.
+
+`eeDit( dim, lst )`:
+- A version of `ee` that works for any local dimension. <- TO FINISH
+
+`bitflip( l, bitlist )`:
+- Input: `l` is a positive integer. `bitlist` is a binary list.
+- Output: `bitlist` where the bit in the `l`th position has been flipped iff `bitlist[ l ]` is one.
 
 `Bin( vec )`:
 - Input: `vec` is a vector of integers.

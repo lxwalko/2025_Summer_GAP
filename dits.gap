@@ -216,6 +216,38 @@ eDit := function( dim, pow, pos )
     return res;
 end;
 
+ee := function( lst )
+#    depends on e
+    local n;
+
+    n := Length( lst );
+
+    return e( n, Bin( lst ) );
+end;
+
+eeDit := function( dim, lst )
+    local numQudits;
+
+    numQudits := Length( lst );
+
+    return eDit( dim, numQudits, BaseN( dim, lst ) );
+end;
+
+bitflip := function( l, bitlist )
+    local result, j;
+    
+    result := [];
+    for j in [1..Length( bitlist )] do
+        if j = l then
+            Add( result, 1 - bitlist[ j ] );
+        else
+            Add( result, bitlist[ j ] );
+        fi;
+    od;
+    
+    return result;
+end;
+
 ###
 # Bin() returns the binary** sum of a vector
 # Bin() does not require 1s and 0s. It works for any vector with numbers

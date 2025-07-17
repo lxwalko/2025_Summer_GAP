@@ -114,21 +114,6 @@ NonZeroLocations := function( matrix )
 
 end;
 
-###
-# IsIndependent() checks if a list of states is linearly independent
-# states is a list of lists, like that produced by PairsToHypergraph()
-#
-# Returns true if linearly independent
-# Returns false if not
-###
-IsIndependent := function( states )
-    if RankMat( states ) = Length( states ) then
-        return true;
-    fi;
-
-    return false;
-end;
-
 # Helper function, swaps two objects in a list
 Swap := function( lst, index1, index2 )
     local temp;
@@ -254,4 +239,33 @@ end;
 ###
 normalizeDM := function( dm )
     return dm / TraceMat( dm );
+end;
+
+# Kronecker product for vectors
+kron := function( vec1, vec2 )
+    return KroneckerProduct( [ vec1 ], [ vec2 ] )[ 1 ];
+end;
+
+# Konecker product for a list of vectors
+KronVec := function( list )
+    local vec, sumVec;
+    
+    sumVec := [ 1 ];
+    for vec in list do
+        sumVec := kron( sumVec, vec );
+    od;
+    
+    return sumVec;
+end;
+
+# Kronecker product for a list of matrices
+Kron := function( list )
+    local mat, sumMat;
+    
+    sumMat := [ [ 1 ] ];
+    for mat in list do
+        sumMat := KroneckerProduct( sumMat, mat );
+    od;
+    
+    return sumMat;
 end;

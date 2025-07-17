@@ -438,32 +438,6 @@ switchplace:=function(list,m,n)
   return newlist;
 end;
 
-# Kronecker product for vectors
-
-kron:=function(vec1,vec2)
-  return KroneckerProduct([vec1],[vec2])[1];
-end;
-
-KronVec:=function(list)
-  local vec,cumvec;
-  cumvec:=[1];
-  for vec in list do
-    cumvec:=kron(cumvec,vec);
-  od;
-  return cumvec;
-end;
-
-# Kronecker product for a list of matrices
-
-Kron:=function(list)
-  local mat,cummat;
-  cummat:=[[1]];
-  for mat in list do
-    cummat:=KroneckerProduct(cummat,mat);
-  od;
-  return cummat;
-end;
-
 ComponentWithBitString := function(bitString,psi)
     if Length(bitString) = BitSize(psi) then
         return psi[Bin(bitString)+1];
@@ -1465,38 +1439,6 @@ ProductPsi:=function(psi)
     return [List([1..n],relabel)];
   end;
   return helper(DMn(psi),[1..BitSize(psi)]);
-end;
-
-ee := function( lst )
-#    depends on e
-    local n;
-
-    n := Length( lst );
-
-    return e( n, Bin( lst ) );
-end;
-
-eeDit := function( dim, lst )
-    local numQudits;
-
-    numQudits := Length( lst );
-
-    return eDit( dim, numQudits, BaseN( dim, lst ) );
-end;
-
-### Basic Operators
-
-bitflip := function(l,bitlist)
-    local result,j;
-    result := [];
-    for j in [1..Length(bitlist)] do
-        if j = l then
-            Add(result,1-bitlist[j]);
-        else
-            Add(result,bitlist[j]);
-        fi;
-    od;
-    return result;
 end;
 
 # pauli X on qubit l
@@ -2589,7 +2531,6 @@ end;
 # For example, the output [ 1, 0, 0, 0, 1, 0, 0 ]
 # would indicate Z^(1) + Y^(2)
 ###
-
 KPsi:=function(cvec)
   return NullspaceMat(M(cvec));
 end;
@@ -3241,63 +3182,6 @@ RootCycle:=function(psi)
   n:=BitSize(psi);
   gen:=GeneratorsOfGroup(CyclicGroup(IsPermGroup,n))[1];
   return Sum(List([0..n-1],j->E(n)^j*PermuteQubitsPsi(psi,gen^j)));
-end;
-
-# use (-j) power for Virginia reel cycling
-RootCycleV := function( psi )
-    local n, gen;
-
-    n := BitSize( psi );
-    gen := GeneratorsOfGroup( CyclicGroup( IsPermGroup, n ) )[ 1 ];
-
-    return Sum( List([0..n-1], j -> E(n)^j * PermuteQubitsPsi( psi, gen^( -j ))));
-end;
-
-###
-# General version of RootCycleV() for local dimension dim
-###
-
-RootCycleQudits := function( dim, lst )
-    local n, gen;
-
-    n := DitSize( dim, lst );
-    gen := GeneratorsOfGroup( CyclicGroup( IsPermGroup, n ) )[ 1 ];
-
-    return Sum( List( [0..n-1], j -> E(n)^j * PermuteQudits( dim, lst, gen^( -j ) )) );
-end;
-
-###
-# WernerGon(n) returns the conjugate of the Werner state of an n-vertex Non-Crossing-Polygon diagram
-# For example, WernerGon(3) returns the state represented by a triangle connecting qubits [1, 2, 3]
-###
-
-WernerGon := n ->
-  normalizeDM(Sum(List([0..2^n-1],composeList( [DM, RootCycle, ee, x->dec2binlist( x, n )] ))));
-
-# This is the complex conjugate of WernerGon
-# ( So the version of the Werner State you'd expect )
-WernerGonV := n ->
-  normalizeDM( Sum( List( [0..2^n-1], composeList( [ DM, RootCycleV, ee, x->dec2binlist( x, n ) ]))));
-
-###
-# WernerDiagram([ [ ] ]) takes a list of lists, for example: [ [1,2], [3] ]
-# Each sublist in the argument "lsts" describes the vertices of a polygon / chord / point
-# Using the above example, [1,2] is a chord between vertices 1 and 2, and [3] is vertex 3 by itself
-#
-# WernerDiagram() returns the density operator of the state
-###
-
-WernerDiagram := function( lsts )
-    local flat, n, dmlst, res;
-
-    flat := Concatenation( lsts );
-    n := Length( flat );
-    Assert( 0, SortedList( flat ) = [1..n] );
-    dmlst := List( lsts, compose( WernerGonV )( Length ));
-
-    res := OrderedKronList( lsts, dmlst );
-
-    return res;
 end;
 
 PauliWeights := composeList([Set,fmap(x -> CountNonZero(x[1])),Filter(x -> x[2] <> 0),PauliListForm3]);
