@@ -6,10 +6,10 @@ Each file will have its own section. Within each section the functions, methods,
 
 ### Table of Contents
 
-1. load.gap[link](#load-gap)
-2. utilities.gap[link](#utilities-gap)
-3. dits.gap[link](#dits-gap)
-4. werner.gap[link](#werner-gap)
+1. [load.gap](#load-gap)
+2. [utilities.gap](#utilities-gap)
+3. [dits.gap](#dits-gap)
+4. [werner.gap](#werner-gap)
 5. orbdim.gap
 6. ncp_hyper.gap
 7. lin_from_eigen.gap
