@@ -193,7 +193,8 @@ in `subsystem` is zero, and inserting from `list1` when the corresponding bit is
 - Output: A list of length <code>2<sup>Length( lst )</sup></code> where the entry in position `Bin( lst ) + 1` is one, all zeros elsewhere.
 
 `eeDit( dim, lst )`:
-- A version of `ee` that works for any local dimension. <- TO FINISH
+- Input: `dim` is a nonnegative integer. `lst` is a list.
+- Output: A list of length <code>dim<sup>Length( lst )</sup></code> where the entry in position `BaseN( lst ) + 1` is one, all zeros elsewhere.
 
 `bitflip( l, bitlist )`:
 - Input: `l` is a positive integer. `bitlist` is a binary list.
