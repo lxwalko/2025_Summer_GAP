@@ -6,10 +6,10 @@ Each file will have its own section. Within each section the functions, methods,
 
 ### Table of Contents
 
-1. load.gap
-2. utilities.gap
-3. dits.gap
-4. werner.gap
+1. load.gap[link](#load-gap)
+2. utilities.gap[link](#utilities-gap)
+3. dits.gap[link](#dits-gap)
+4. werner.gap[link](#werner-gap)
 5. orbdim.gap
 6. ncp_hyper.gap
 7. lin_from_eigen.gap
@@ -218,4 +218,17 @@ integer specifying the number of digits in each ditstring.
 
 ## werner.gap
 
-`werner.gap` contains the code necessary to create and experiment upon Werner states.
+`werner.gap` contains the code necessary to create and experiment upon Werner states. Unlike other sections in `DOC.md`, the
+functions of `werner.gap` are documented in an order that attempts to reflect their importance to the user, rather than order of
+appearance.
+
+### Functions
+
+`WernerDiagram( lsts )`:
+- Input: `lsts` is a list of lists, which describes an NCP diagram.
+- Output: The density matrix for the state described by `lsts` in local dimension two.
+
+`WernerDiagramQudits( dim, lsts )`:
+- Input: `dim` is a nonnegative integer, describing the local dimension of each constituent qudit. `lsts` is a list of lists
+which describes an NCP digram.
+- Output: The density matrix for the state described by `lsts` in local dimension `dim`.
