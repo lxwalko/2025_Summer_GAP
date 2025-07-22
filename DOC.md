@@ -1,3 +1,5 @@
+\newcommand{\Length}{\mbox{\rm Length}}
+
 # LVC MathPhys GAP Code Documentation
 
 ### Preface
@@ -144,11 +146,11 @@ counting, ditstring generation, bitstring tensors, etc. are found here.
   
 `BitSize( lst )`:
 - Input: `lst` is a list.
-- Output: $`log{2}{Length( lst )}`$ rounded down to the nearest integer.
+- Output: $`\log{2}{Length( lst )}`$ rounded down to the nearest integer.
   
 `DitSize( d, lst )`:
 - Input: `d` is an integer specifying the base. `lst` is a list.
-- Output: $`log{d}{Length( lst )}`$ rounded down to the nearest integer.
+- Output: $`\log{d}{Length( lst )}`$ rounded down to the nearest integer.
   
 `BitComplement( binlist )`:
 - Input: `binlist` is a binary list; a list of zeros and ones.
