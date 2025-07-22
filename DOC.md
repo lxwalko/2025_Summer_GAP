@@ -144,11 +144,11 @@ counting, ditstring generation, bitstring tensors, etc. are found here.
   
 `BitSize( lst )`:
 - Input: `lst` is a list.
-- Output: `log<sub>2</sub>(Length( lst ))` rounded down to the nearest integer.
+- Output: <code>log<sub>2</sub>(Length( lst ))</code> rounded down to the nearest integer.
   
 `DitSize( d, lst )`:
 - Input: `d` is an integer specifying the base. `lst` is a list.
-- Output: `log<sub>d</sub>(Length( lst ))` rounded down to the nearest integer.
+- Output: <code>log<sub>d</sub>(Length( lst ))</code> rounded down to the nearest integer.
   
 `BitComplement( binlist )`:
 - Input: `binlist` is a binary list; a list of zeros and ones.
