@@ -190,6 +190,38 @@ OneBinList := function( k, n )
 end;
 
 ###
+# Bin() returns the binary** sum of a vector
+# Bin() does not require 1s and 0s. It works for any vector with numbers
+# For example: Bin( [1, 2] ) = (2^(1) * 1) + (2^(0) * 2) = 4
+###
+Bin := function( vec )
+    local place, dec;
+
+    dec := 0;
+
+    for place in [1..Length( vec )] do
+        dec := dec + 2^(Length( vec ) - place) * vec[ place ];
+    od;
+
+    return dec;
+end;
+
+###
+# BaseN() is a generalized form of Bin() for base N
+###
+BaseN := function( base, vec )
+    local place, total;
+
+    total := 0;
+
+    for place in [1..Length( vec )] do
+        total := total + base^(Length( vec ) - place) * vec[place];
+    od;
+
+    return total;
+end;
+
+###
 # e() returns a list with length 2^num where the
 # entry in the bin + 1 position is 1, all else 0
 ##
@@ -246,38 +278,6 @@ bitflip := function( l, bitlist )
     od;
     
     return result;
-end;
-
-###
-# Bin() returns the binary** sum of a vector
-# Bin() does not require 1s and 0s. It works for any vector with numbers
-# For example: Bin( [1, 2] ) = (2^(1) * 1) + (2^(0) * 2) = 4
-###
-Bin := function( vec )
-    local place, dec;
-
-    dec := 0;
-
-    for place in [1..Length( vec )] do
-        dec := dec + 2^(Length( vec ) - place) * vec[ place ];
-    od;
-
-    return dec;
-end;
-
-###
-# BaseN() is a generalized form of Bin() for base N
-###
-BaseN := function( base, vec )
-    local place, total;
-
-    total := 0;
-
-    for place in [1..Length( vec )] do
-        total := total + base^(Length( vec ) - place) * vec[place];
-    od;
-
-    return total;
 end;
 
 ###

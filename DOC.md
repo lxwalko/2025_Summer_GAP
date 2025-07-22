@@ -182,15 +182,15 @@ in `subsystem` is zero, and inserting from `list1` when the corresponding bit is
   
 `e( num, bin )`:
 - Input: `num` and `bin` are nonnegative integers.
-- Output: A list of length 2^`num` where the entry in position `bin`+1 is one, all zeros elsewhere.
+- Output: A list of length $`2^num`$ where the entry in position $`bin + 1`$ is one, all zeros elsewhere.
 
 `eDit( dim, pow, pos )`:
 - Input: `dim`, `pos`, and `pos` are nonnegative integers.
-- Output: A list of length `dim^pow` where the entry in position `pos`+1 is one, all zeros elsewhere.
+- Output: A list of length $`dim^pow`$ where the entry in position $`pos + 1`$ is one, all zeros elsewhere.
 
 `ee( lst )`:
 - Input: `lst` is a list.
-- Output: A list of length 2^`Length( lst )` where the entry in position `Bin( lst )`+1 is one, all zeros elsewhere.
+- Output: A list of length $`2^Length( lst )`$ where the entry in position $`Bin( lst ) + 1`$ is one, all zeros elsewhere.
 
 `eeDit( dim, lst )`:
 - A version of `ee` that works for any local dimension. <- TO FINISH

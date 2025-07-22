@@ -31,6 +31,7 @@ nonCrossingPair := pr -> nonCrossing( pr[ 1 ] )( pr[ 2 ] );
 NCPartition := part -> And( fmap( nonCrossingPair )( Combinations( part, 2 ) ) );
 
 # Non-crossing partitions
+# Give a list [1..numQubits] -> returns all of the possible NCP diagrams
 NCPartitionsSet := xs -> filter( PartitionsSet( xs ), NCPartition );
 
 ################################
@@ -221,3 +222,140 @@ DotlessWernerBasisCheck := n -> RankMat( List( DotlessNCPartitionsSet( [1..n] ),
 
 DotlessWernerBasisCheckImperative := n -> RankMat( List( DotlessNCPartitionsSetImperative( [1..n] ), 
                                                         compose( flatten )( WernerDiagram ) ) );
+                                                        
+
+################################
+# Linear Combinations Checking #
+################################
+
+# Tracing out qudits and checking to see what linear combinations of NCP( n-1 ) create them
+
+###
+# REQUIRES "orbdim.gap" AND "werner.gap"
+#
+# Returns the coefficient of the (numQubits - 1)-gon
+# As an answer to the question what linear combination
+# of (numQubits - 1) NCPs equals the
+# N-gon with the nth qubit traced out
+###
+TraceOutNGon := function( numQubits )
+    local tracedNGon, nGon, underGons, targetQubits, gon, res, place, count;
+
+    # creates the n-gon
+    nGon := WernerDiagram( [ [1..numQubits] ] );
+
+    # creates n-entry list of 0s, where final entry is 1
+    targetQubits := List( [1..numQubits], i -> 0 );
+    targetQubits[ numQubits ] := 1;
+
+    # traces out the nth qubit of the n-gon
+    tracedNGon := PartialTrace( nGon, targetQubits );
+
+    # list of NCP(n-1) states
+    underGons := [];
+
+    count := 0;
+    place := 0;
+    for gon in NCPartitionsSet( [1..(numQubits - 1)] ) do
+        # add each NCP(n-1) to underGons
+        Add( underGons, Flat( WernerDiagram( gon ) ) );
+
+        # keeps track of the position of the (n-1)-gon in underGons
+        count := count + 1;
+        if Length( gon ) = 1 then
+            place := count;
+        fi;
+    od;
+
+    if res = fail then
+        Display( "TraceOutNGon: No linear combination of NCP( n - 1 ) exists" );
+        return -1;
+    fi;
+
+    # solve for the linear combination of NCP(n-1)s that equal
+    # traced out n-gon
+    res := SolutionMat( underGons, Flat( tracedNGon ) );
+
+    # returns the coefficient of the (n-1)-gon
+    return [res[ place ], res];
+end;
+
+###
+# REQUIRES FLOAT PACKAGE
+# Returns the decimal representations
+#
+# TraceOutNGonDecimal() functions the same as
+# TraceOutNGon(), except it returns the decmial
+# representation of results
+###
+TraceOutNGonDecimal := function( numQubits )
+    local exactLst, decLst, pos, value, count;
+
+    exactLst := TraceOutNGon( numQubits );
+
+    # Find and store position of (n-1)-gon
+    pos := 0;
+    count := 1;
+    for value in exactLst[ 2 ] do
+        if exactLst[ 1 ] = value then
+            pos := count;
+        fi;
+
+        count := count + 1;
+    od;
+
+    # Convert all cyclotomic values to decimal approximation
+    decLst := List( exactLst[ 2 ], Float );
+
+    # Return decimals in same pattern as TraceOutNGon() output
+    return [ decLst[ pos ], decLst ];
+end;
+
+###
+# TraceOutQudits() is a more general form of TraceOutNGon()
+# which allows any local dimension dim, and tracing any number of qudits
+# specified by a binary list, targetqudits. Ex: [0,0,0,1] -> traces out 4th qudit
+# numQudits is the number of qudits of the n-gon being partial traced
+#
+# Function returns a list of the form:
+# [ coefficient of top-gon, [ coefficients of lower gons including top-gon ] ]
+###
+TraceOutQudits := function( dim, numQudits, targetQudits )
+    local tracedNGon, nGon, underGons, gon, res, place, count, quditDiff;
+
+    # creates the n-gon
+    nGon := WernerDiagramQudits( dim, [ [1..numQudits] ] );
+
+    # traces out the target qudits of the n-gon
+    tracedNGon := PartialTraceQudits( dim, nGon, targetQudits );
+
+    # list of NCP(n-1) states
+    underGons := [];
+
+    quditDiff := Count( 1, targetQudits );
+
+    count := 0;
+    place := 0;
+    for gon in NCPartitionsSet( [1..(numQudits - quditDiff)] ) do
+        # add each NCP(n-1) to underGons
+        Add( underGons, Flat( WernerDiagramQudits( dim, gon ) ) );
+
+        # keeps track of the position of the (n-1)-gon in underGons
+        count := count + 1;
+        if Length( gon ) = 1 then
+            place := count;
+        fi;
+    od;
+
+    # solve for the linear combination of NCP(n-1)s that equal
+    # traced out n-gon
+    res := SolutionMat( underGons, Flat( tracedNGon ) );
+
+    if res = fail then
+        Display( "TraceOutQudits: No linear combination of NCP( n - quditDiff ) exists" );
+        return -1;
+    fi;
+
+    # returns the coefficient of the (n-1)-gon
+    return [res[ place ], res];
+end;
