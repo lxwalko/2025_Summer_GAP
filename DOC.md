@@ -182,15 +182,15 @@ in `subsystem` is zero, and inserting from `list1` when the corresponding bit is
   
 `e( num, bin )`:
 - Input: `num` and `bin` are nonnegative integers.
-- Output: A list of length `2<sup>num</sup>` where the entry in position `bin + 1` is one, all zeros elsewhere.
+- Output: A list of length <code>2<sup>num</sup></code> where the entry in position `bin + 1` is one, all zeros elsewhere.
 
 `eDit( dim, pow, pos )`:
 - Input: `dim`, `pos`, and `pos` are nonnegative integers.
-- Output: A list of length `dim<sup>pow</sup>` where the entry in position `pos + 1` is one, all zeros elsewhere.
+- Output: A list of length <code>dim<sup>pow</sup></code> where the entry in position `pos + 1` is one, all zeros elsewhere.
 
 `ee( lst )`:
 - Input: `lst` is a list.
-- Output: A list of length `2<sup>Length( lst )</sup>` where the entry in position `Bin( lst ) + 1` is one, all zeros elsewhere.
+- Output: A list of length <code>2<sup>Length( lst )</sup></code> where the entry in position `Bin( lst ) + 1` is one, all zeros elsewhere.
 
 `eeDit( dim, lst )`:
 - A version of `ee` that works for any local dimension. <- TO FINISH
@@ -213,7 +213,7 @@ multiplied by increasing powers of two starting from the right.
 `BaseNCounting( base, numDigits )`:
 - Input: `base` is an integer denoting the base of the counting (such as base 2, base 3, etc.). `numDigits` is a nonnegative
 integer specifying the number of digits in each ditstring.
-- Output: A list of ditstrings that count from `0` to `base<sup>numDigits - 1</sup>`.
+- Output: A list of ditstrings that count from `0` to <code>base<sup>numDigits - 1</sup></code>.
 
 ## werner.gap
 
