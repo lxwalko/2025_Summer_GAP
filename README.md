@@ -14,7 +14,7 @@ Now, you need to install git. To do so, follow the instructions found [here](htt
   
 You're now ready to download this code to your machine.
 1. Open the terminal (This is called PowerShell or cmd.exe on Windows)
-2. Change directories to the directory you created for your GAP files using the command
+2. Change directories to the directory you created for your GAP files using the command  
 `cd file_path_to_your_directory`
 3. Run the command `git pull https://github.com/lxwalko/2025_Summer_GAP/tree/master` 
 
