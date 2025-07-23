@@ -242,3 +242,21 @@ written in cycle notation.
 - Input: `dim` is a positive integer which describes the local dimension of each qudit. `n` is a nonnegative integer which describes the number of qudits. 
 `perm` is a GAP permutation written in cycle notation.
 - Output: A <code>dim<sup>n</sup></code> by <code>dim<sup>n</sup></code> permutation matrix.
+
+`WernerGonV( n )`:
+- Input: `n` is a nonnegative integer that describes the number of qubits.
+- Output: The density matrix of the `n`-gon in local dimension two.
+- Note: There is a twin function, `WernerGon`, which has the same input but returns the complex conjugate of `WernerGonV`.
+
+`WernerGonQudits( dim, numQudits )`:
+- Input: `dim` is an nonnegative integer which describes the local dimension of each qudit. `numQudits` is a nonnegative
+integer which describes the number of qudits.
+- Output: The density matrix of the `numQudits`-gon in local dimension `dim`.
+
+`NCPartitionsSet( xs )`:
+- Input: `xs` is a list from one to *n*, where *n* is the number of qudits.
+- Output: A list of lists describing all possible NCP diagrams with *n* qudits.
+
+`DotlessNCPartitionsSet( xs )`:
+- Input: `xs` is a list from one to *n*, where *n* is the number of qudits.
+- Output: A list of lists describing all dotless NCP diagrams with *n* qudits.
