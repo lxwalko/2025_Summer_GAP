@@ -26,5 +26,7 @@ You're now ready to download this code to your machine.
 1. Start GAP from the terminal with the command `gap`
 2. Change directory to where this code is saved with the command `ChangeDirectoryCurrent( "filepath" );`
 3. Read all the code in this codebase using the command `Read( "load.gap" );`     *Or you can read individual files with* `Read( "filename" );`
+
+If you have more general difficulty using GAP than just loading these files, visit the GAP tutorial [here](https://docs.gap-system.org/doc/tut/chap2_mj.html#X7A3C7AE07D6848E3).
   
 Documentation (where applicable) is written in the source files. More organized documentation can be found in the `DOC.md` file.
