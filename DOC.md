@@ -232,3 +232,13 @@ appearance.
 - Input: `dim` is a nonnegative integer, describing the local dimension of each constituent qudit. `lsts` is a list of lists
 which describes an NCP digram.
 - Output: The density matrix for the state described by `lsts` in local dimension `dim`.
+
+`PermMatGen( n, perm )`:
+- Input: `n` is a nonnegative integer which describes the number of qubits in the system. `perm` is a GAP permutation 
+written in cycle notation.
+- Output: A <code>2<sup>n</sup></code> by <code>2<sup>n</sup></code> permutation matrix.
+
+`PermMatGenQudits( dim, n, perm )`:
+- Input: `dim` is a positive integer which describes the local dimension of each qudit. `n` is a nonnegative integer which describes the number of qudits. 
+`perm` is a GAP permutation written in cycle notation.
+- Output: A <code>dim<sup>n</sup></code> by <code>dim<sup>n</sup></code> permutation matrix.
