@@ -39,7 +39,6 @@ NCPartitionsSet := xs -> filter( PartitionsSet( xs ), NCPartition );
 ################################
 
 ###
-# REQUIRES "orbdim.gap"
 # Generates 2^n by 2^n permutation matrices
 # perm is a permutation written in cycle notation
 ###
@@ -60,7 +59,6 @@ PermMatGen := function( n, perm )
 end;
 
 ###
-# REQUIRES "orbdim.gap"
 # Generates dim^n by dim^n permutation matrices
 # perm is a permutation written in cycle notation
 ###
@@ -114,7 +112,6 @@ WernerGonV := n ->
   normalizeDM( Sum( List( [0..2^n-1], composeList( [ DM, RootCycleV, ee, x->dec2binlist( x, n ) ]))));
   
 ###
-# REQUIRES "orbdim.gap"
 # Returns density matrix of a numQudits-Gon diagram in local dimension dim
 ###
 WernerGonQudits := function( dim, numQudits )
@@ -148,7 +145,6 @@ WernerDiagram := function( lsts )
 end;
 
 ###
-# REQUIRES "orbdim.gap"
 # WernerDiagramQudits is the general form of WernerDiagram()
 # lsts is a list of lists, dim is the local dimension
 # Function returns rho of the specified diagram state

@@ -2,7 +2,8 @@
 
 ### Preface
 
-Each file will have its own section. Within each section the functions, methods, and other items are documented.
+Each file will have its own section. Within each section the functions, methods, and other items are documented. Assume
+that any function from a file lower in the table of contents / load order depends on functions found in file(s) above it.
 
 ### Table of Contents
 

@@ -13,7 +13,6 @@ Print("Read coefficients.gap");
 ###                                    ###
 
 ###
-# REQUIRES "orbdim.gap" AND "werner.gap"
 #
 # Returns the coefficient of the (numQubits - 1)-gon
 # As an answer to the question what linear combination
