@@ -10,7 +10,7 @@ Each file will have its own section. Within each section the functions, methods,
 2. [utilities.gap](#utilitiesgap)
 3. [dits.gap](#ditsgap)
 4. [werner.gap](#wernergap)
-5. orbdim.gap
+5. [orbdim.gap](#orbdimgap)
 6. ncp_hyper.gap
 7. lin_from_eigen.gap
 
@@ -26,7 +26,7 @@ confusion that some of these terms caused me.
 - `res`: The result / return value of a function
 - `rootUnity`: A root of unity
 - `perm`: A permutation; written in cycle notation, as this is the format recognized by GAP
-- `dim`: The local dimension of a qudit / qudit system
+- `dim`: The local dimension of a qubit / qudit system
 - `k` or `n`: A number, generally specifying a number of elements or iterations
 - `mat`: A matrix
   
@@ -130,6 +130,13 @@ begins indexing at 1.
 `Kron( list )`:
 - Input: `list` is a list of matrices.
 - Output: The kronecker product of every matrix in `list`.
+
+`cdr( lst )`:
+- Input: `lst` is a list.
+- Output: A copy of `lst` with the first element removed.
+
+`GramSchmidt( lst, inner )`:
+- Input: `lst` is a list
 
 ## dits.gap
 
@@ -260,3 +267,14 @@ integer which describes the number of qudits.
 `DotlessNCPartitionsSet( xs )`:
 - Input: `xs` is a list from one to *n*, where *n* is the number of qudits.
 - Output: A list of lists describing all dotless NCP diagrams with *n* qudits.
+
+## orbdim.gap
+
+`orbdim.gap` holds code from summers past in one very long, mostly unorganized file. The infrastructure found in
+`orbdim.gap` that was relevant to the endevours of summer 2025 was moved to respective files. The remaining code is
+mostly uncommented and can be difficult to understand. If you have a need not met with the other files, it may be found within 
+`orbdim.gap`. Parsing that search is an exercise left for the user.
+
+## ncp_hyper.gap
+
+`ncp_hyper.gap` handles hypergraph states, and their relationships to NCC diagrams.

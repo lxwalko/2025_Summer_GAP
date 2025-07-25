@@ -235,9 +235,10 @@ end;
 
 ###
 # Returns normalized density matrix
-# TraceMat( normalizeDM( matrix ) ) = 1
+# Trace( normalizeDM( matrix ) ) = 1
 ###
 normalizeDM := function( dm )
+    Assert( 0, Trace( dm ) <> 0 );
     return dm / TraceMat( dm );
 end;
 
@@ -268,4 +269,34 @@ Kron := function( list )
     od;
     
     return sumMat;
+end;
+
+# Returns lst with the first entry removed
+cdr := function( lst )
+  return lst{ [2..Length( lst )] };
+end;
+
+### Gram-Schmidt orthonormalization
+GramSchmidt := function( lst )
+    local helper;
+    
+    helper := function( ortho, rest )
+        local new, term;
+        
+        if IsEmpty( rest ) then
+            return ortho;
+        else
+            new := rest[ 1 ];
+            
+        for term in ortho do
+            new := new - term * InnerProduct( term, rest[ 1 ] );
+        od;
+        
+        new := new / Sqrt( InnerProduct( new, new ) );
+        
+        return helper( Concatenation( ortho, [ new ] ), cdr( rest ) );
+        fi;
+    end;
+    
+    return helper([],lst);
 end;

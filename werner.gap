@@ -359,3 +359,114 @@ TraceOutQudits := function( dim, numQudits, targetQudits )
     # returns the coefficient of the (n-1)-gon
     return [res[ place ], res];
 end;
+
+# numQudits is the number of qudits of the n-gon to trace down from. targetQudits is a list of the qudits to trace out.
+# dim is the local dimension
+# targetQudits must have 3 zeros!
+# This code finds the coefficients of linear combinations in Werner and Eggeling's basis that give traced n-gons
+# NOT A CHECK OF THEIR PAPER, THIS IS SOMETHING ELSE
+WEBasisLinCombs := function( dim, numQudits, targetQudits )
+    local nGon, state, weBasis, res, Id, V12, V23, V31, V123, V321, rPlus, rMinus, rZero, rOne, rTwo, rThree;
+    # Check that targetQudits leaves 3 qubits untouched
+    Assert( 0, Count( 0, targetQudits ) = 3 );
+    
+    # Basis for 3-qudit Werner space defined by Werner and Eggeling
+    # GAP doesn't like the permutation (1,2,3), so it's written in the equivalent form (2,3,1)
+    # Below are the necessary permutation matrices
+    Id := IdentityMat(dim^3);  V12 := PermMatGenQudits(dim, 3, (1,2));  V23 := PermMatGenQudits(dim, 3, (2,3)); 
+    V31 := PermMatGenQudits(dim ,3, (3,1)); V123 := PermMatGenQudits(dim, 3, (2,3,1)); 
+    V321 := PermMatGenQudits(dim, 3, (3,2,1));
+
+    rPlus := 1/6 * ( Id + V12 + V23 + V31 + V123 + V321 );
+
+    rMinus := 1/6 * ( Id - V12 - V23 - V31 + V123 + V321 );
+
+    rZero := 1/3 * ( 2 * Id - V123 - V321 );
+
+    rOne := 1/3 * ( 2 * V23 - V31 - V12 );
+
+    rTwo := 1/Sqrt( 3 ) * ( V12 - V31 );
+
+    rThree := E(4)/Sqrt(3) * ( V123 - V321 );
+    
+    # Create numQudits-gon and trace out all but 3 qudits
+    nGon := WernerDiagramQudits( dim, [[1..numQudits]] );
+    state := PartialTraceQudits( dim, nGon, targetQudits );
+        
+    # weBasis is the basis defined by Werner and Eggeling
+    weBasis := List( [ rPlus, rMinus, rZero, rOne, rTwo, rThree ], Flat );
+    
+    # Find coefficients of W.E. basis that return traced n-gon
+    res := SolutionMat( weBasis, Flat( state ) );
+    
+    return res;
+end;
+
+WEBasisCoeffs := function( dim, numQudits, targetQudits )
+    local nGon, state, weBasis, R, res, Id, V12, V23, V31, V123, V321, rPlus, rMinus, rZero, rOne, rTwo, rThree;
+    # Check that targetQudits leaves 3 qubits untouched
+    Assert( 0, Count( 0, targetQudits ) = 3 );
+    
+    # Basis for 3-qudit Werner space defined by Werner and Eggeling
+    Id := IdentityMat(dim^3);  V12 := PermMatGenQudits(dim, 3, (1,2));  V23 := PermMatGenQudits(dim, 3, (2,3)); 
+    V31 := PermMatGenQudits(dim ,3, (3,1)); V123 := PermMatGenQudits(dim, 3, (2,3,1)); 
+    V321 := PermMatGenQudits(dim, 3, (3,2,1));
+
+    rPlus := 1/6 * ( Id + V12 + V23 + V31 + V123 + V321 );
+
+    rMinus := 1/6 * ( Id - V12 - V23 - V31 + V123 + V321 );
+
+    rZero := 1/3 * ( 2 * Id - V123 - V321 );
+
+    rOne := 1/3 * ( 2 * V23 - V31 - V12 );
+
+    rTwo := 1/Sqrt( 3 ) * ( V12 - V31 );
+
+    rThree := E(4)/Sqrt(3) * ( V123 - V321 );
+    
+    # Create numQudits-gon and trace out all but 3 qudits
+    nGon := WernerDiagramQudits( dim, [[1..numQudits]] );
+    state := PartialTraceQudits( dim, nGon, targetQudits );
+    
+    # Collect Werner and Eggeling Basis for 'for' loop
+    weBasis := [rPlus, rMinus, rZero, rOne, rTwo, rThree];
+    
+    # Calculate Tr( state * R ) for all R in weBasis, collect into res list; preserves order of weBasis
+    res := [];
+    for R in weBasis do
+        Add( res, Trace( state * R ) );
+    od;
+    
+    return res;
+end;
+
+# Checks biseparability and triseparability. Takes the output of WEBasisCoeffs as input.
+# Output is a list of "true" and "false" corresponding to each condition
+CheckSeperability := function( lst )
+    local res, rPlus, rMinus, rZero, rOne, rTwo, rThree, trisep, bisep;
+    # Separate W.E. Basis into parts
+    rPlus := lst[1]; rMinus := lst[2]; rZero := lst[3]; rOne := lst[4]; rTwo := lst[5]; rThree := lst[6];
+    
+    res := [];
+    
+    # Check triseparability
+    trisep := [];
+    if 0 <= rMinus and rMinus <= 1/6 then 
+        Add( trisep, true );
+    else
+        Add( trisep, false );
+    fi;
+    if 1/4 * (1 - 2*rMinus) <= rPlus and rPlus <= 1 - 5*rMinus then
+        Add( trisep, true );
+    else
+        Add( trisep, false );
+    fi;
+    if (3*(rThree^2)+(1-3*rPlus)^2)*(1-6*rMinus) <= (rOne+rPlus-rMinus)*((rMinus-2*rPlus+2*rMinus)^2 - 3*(rTwo^2)) then
+        Add( trisep true );
+    else
+        Add( trisep false );
+    fi;
+    
+    # Check biseparability
+    bisep := [];
+end;

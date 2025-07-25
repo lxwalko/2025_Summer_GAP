@@ -44,11 +44,6 @@ car:=function(lst)
   return lst[1];
 end;
 
-# Returns a list from 2 to Length( lst )
-cdr := function( lst )
-  return lst{ [2..Length( lst )] };
-end;
-
 cons:=function(a,lst)
   return Concatenation([a],lst);
 end;
@@ -3093,27 +3088,7 @@ end;
 
 ExtremalDM := rho -> Determinant(rho) = 0 and PositiveSemidefinite(rho);
 
-### Gram-Schmidt orthonormalization
-
-GramSchmidt:=function(lst,inner)
-  local helper;
-  helper:=function(ortho,rest)
-    local new,term;
-    if IsEmpty(rest) then
-      return ortho;
-    else
-      new:=rest[1];
-      for term in ortho do
-        new:=new - term * inner(term,rest[1]);
-      od;
-      new:=new/Sqrt(inner(new,new));
-      return helper(Concatenation(ortho,[new]),cdr(rest));
-    fi;
-  end;
-  return helper([],lst);
-end;
-
-# No normalization version
+# No normalization version of Gram-Schmidt
 GramSchmidtNN:=function(lst,inner)
   local helper;
   helper:=function(ortho,rest)
