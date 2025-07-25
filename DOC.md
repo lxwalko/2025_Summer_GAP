@@ -12,7 +12,8 @@ Each file will have its own section. Within each section the functions, methods,
 4. [werner.gap](#wernergap)
 5. [orbdim.gap](#orbdimgap)
 6. ncp_hyper.gap
-7. lin_from_eigen.gap
+7. lin\_from\_eigen.gap
+8. coefficients.gap
 
 ### Common Syntax / Symbols
 

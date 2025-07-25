@@ -13,4 +13,6 @@ Read("werner.gap");Print("\n");
 
 Read("ncp_hyper.gap");Print("\n");
 
-Read("lin_from_eigen.gap");
+Read("lin_from_eigen.gap");Print("\n");
+
+Read("coefficients.gap");
